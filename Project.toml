@@ -1,0 +1,7 @@
+name = "BasicTypes"
+uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
+authors = ["Matteo Conti <matteo.conti@esa.int>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.9"

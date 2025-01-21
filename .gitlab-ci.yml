@@ -1,0 +1,15 @@
+include:
+  - project: tec-esc-tools/ESAGitlabTools.jl
+    file:
+      - ci_cd/linux.yml
+      - ci_cd/windows.yml
+Julia latest (Linux):
+  variables:
+    JULIA_VERSION: "latest"
+  extends:
+    - .linux_test_coverage
+# Julia latest (Windows):
+#  variables:
+#    JULIA_VERSION: "latest"
+#   extends:
+#     - .windows_test
