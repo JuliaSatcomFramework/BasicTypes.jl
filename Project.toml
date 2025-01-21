@@ -3,5 +3,11 @@ uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
 authors = ["Matteo Conti <matteo.conti@esa.int>"]
 version = "0.1.0"
 
+[deps]
+TerminalLoggers = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
 [compat]
+TerminalLoggers = "0.1.7"
+Unitful = "1.22.0"
 julia = "1.9"

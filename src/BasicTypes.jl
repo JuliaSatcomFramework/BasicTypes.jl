@@ -1,10 +1,9 @@
 module BasicTypes
 
-using Unitful: °, rad, Quantity, Length
-using TOML: TOML
+using Unitful: °, rad, Quantity, Length, NoDims
 using TerminalLoggers: TerminalLogger, TerminalLoggers
 
 include("basics.jl")
-export ValidAngle, ValidDistance, Constants, NotProvided, NotSimulated, TERMINAL_LOGGER, PKG_VERSION, SCRATCH_DIR, Deg
+export ValidAngle, ValidDistance, Constants, NotProvided, NotSimulated, TERMINAL_LOGGER, Deg
 
 end

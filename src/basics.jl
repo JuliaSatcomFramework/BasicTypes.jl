@@ -34,7 +34,7 @@ Base.eltype(::NotProvided) = Union{}
 Base.keys(::NotProvided) = Base.OneTo(0) # Required for `eachindex`
 
 """
-    NotSimulated <: Exception
+    NotSimulated
 
 Custom exception type to indicate that a certain operation or function is not
 simulated. This exception can be used to signal that a particular feature or
@@ -47,9 +47,7 @@ Base.iterate(::NotSimulated, state::Int=1) = nothing
 Base.eltype(::NotSimulated) = Union{}
 Base.keys(::NotSimulated) = Base.OneTo(0) # Required for `eachindex`
 
-# Initialize the global TerminalLogger and Scratch Space
+# Initialize the global TerminalLogger
 const TERMINAL_LOGGER = Ref{TerminalLogger}()
-const PKG_VERSION = VersionNumber(TOML.parsefile(Base.current_project(@__DIR__))["version"]) # Get the current package version at compile-time to be used as name for the scratch space.
-const SCRATCH_DIR = Ref{String}()
 
 
