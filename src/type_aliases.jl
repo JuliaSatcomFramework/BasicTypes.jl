@@ -7,8 +7,19 @@ const Deg{T} = Quantity{T,NoDims,typeof(°)}
 const Rad{T} = Quantity{T,NoDims,typeof(rad)}
 
 ## Angle Types
+const LengthUnit = Unitful.Units{<:Any, u"𝐋", nothing}
 const UnitfulAngleQuantity = Union{Deg, Rad}
+"""
+    const ValidAngle = Union{UnitfulAngleQuantity, Real}
+
+Union type representing a scalar value that can be interpreted as an angle, which can be either a unitless real number, or a Unitful.Quantity with `u"rad"` or `u"°"` as unit.
+"""
 const ValidAngle = Union{UnitfulAngleQuantity, Real}
+"""
+    const ValidDistance = Union{Len, Real}
+
+Union type representing a scalar value that can be interpreted as a distance, which can be either a unitless real number, or a Unitful.Quantity with a valid Length unit.
+"""
 const ValidDistance = Union{Len, Real}
 
 # Type alias for valid point subtypes
