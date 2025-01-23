@@ -1,9 +1,23 @@
 module BasicTypes
 
-using Unitful: °, rad, Quantity, Length, NoDims
-using TerminalLoggers: TerminalLogger, TerminalLoggers
+using Logging: Logging, current_logger
+using LoggingExtras: LoggingExtras, TeeLogger
+using StaticArrays: StaticArrays, SVector
+using TerminalLoggers: TerminalLoggers, TerminalLogger
+using Unitful: Unitful, °, rad, Quantity, Length, NoDims, m, km, @u_str, ustrip, uconvert
 
-include("basics.jl")
-export ValidAngle, ValidDistance, Constants, NotProvided, NotSimulated, TERMINAL_LOGGER, Deg
+# Exports from deps
+export °, km, @u_str, ustrip
+
+include("types.jl")
+export ExtraOutput, NotSimulated, NotProvided
+
+include("type_aliases.jl")
+export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Point3D, Deg, Rad, Met, Len
+
+include("constants.jl")
+
+include("functions.jl")
+export to_meters, to_radians, to_degrees, terminal_logger, progress_logger
 
 end
