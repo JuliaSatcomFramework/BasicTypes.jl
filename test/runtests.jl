@@ -7,7 +7,6 @@ using TestItemRunner
 end
 
 @testitem "EmptyIterator" begin
-
     for T in (NotSimulated, NotProvided)
         @test_nowarn for i in T()
             error("ASD")
@@ -16,7 +15,6 @@ end
         @test length(T()) == 0
         @test eachindex(T()) == Base.OneTo(0)
     end
-
 end
 
 @testitem "Terminal Logger" begin
