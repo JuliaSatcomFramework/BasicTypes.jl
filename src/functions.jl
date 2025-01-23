@@ -1,91 +1,50 @@
-# Units Helper Functions
-_validtype(t, A::Union{DataType, Union}) = eltype(t) <: A || length(t) > 1 && all(x -> _validtype(x, A), t)
+"""
+    to_radians(x::ValidAngle)
+    to_radians(x::ValidAngle, rounding::RoundingMode)
 
-function _check_angle_func(limit = π) 
-	f(x::ValidAngle) = abs(x) <= limit
-end
-function _check_angle(x; limit = π, msg::String = "Angles directly provided as numbers must be expressed in radians and satisfy -$limit ≤ x ≤ $limit
-Consider using `°` from Unitful.jl if you want to pass numbers in degrees, by doing `x * °`." )  
-	@assert all(_check_angle_func(limit), x) msg
-end
+Take one scalar value representing an angle and convert it to floating point Unitful quantities with radian (`rad`) units.
+
+!!! note
+    The input angles provided as unitless numbers are treated as degrees.
+
+The 2-arg method can be used to also wrap (using `rem`) the angle provided as first argument using the rounding mode specified as second argument.
+
+See also: [`to_degrees`](@ref), [`to_length`](@ref), [`to_meters`](@ref)
+"""
+to_radians(x::Real) = deg2rad(x) * rad
+to_radians(x::UnitfulAngleQuantity) = uconvert(rad, float(x))
 
 """
-	to_radians(x::Real; rounding::RoundingMode = RoundNearest)
+    to_degrees(x::ValidAngle)
+    to_degrees(x::ValidAngle, rounding::RoundingMode)
 
-Takes a real number (assumed to represent an angle in radians) and normalizes it
-using `rem2pi(x, rounding)` to wrap the angle.
+Take one scalar valid angle and convert it to floating point Unitful quantities with degree (`°`) units.
 
-See also: [`to_degrees`](@ref), [`to_meters`](@ref)
+!!! note
+    The input angles provided as unitless numbers are treated as degrees.
+
+The 2-arg method can be used to also wrap (using `rem`) the angle provided as first argument using the rounding mode specified as second argument.
+
+See also: [`to_radians`](@ref), [`to_length`](@ref), [`to_meters`](@ref)
 """
-to_radians(x::Real; rounding::RoundingMode = RoundNearest) = abs(x) <= π ? float(x) : rem2pi(x, rounding)
+to_degrees(x::Real) = float(x) * °
+to_degrees(x::UnitfulAngleQuantity) = uconvert(°, float(x))
 
-"""
-	to_radians(x::UnitfulAngleQuantity; rounding::RoundingMode = RoundNearest)
-
-Takes a Unitful Angular Quantity, transforms it to radians and wraps the angle.
-This function basically does the following:\\
-`to_radians(ustrip(uconvert(u"rad", x)); rounding)`
-"""
-to_radians(x::UnitfulAngleQuantity; kwargs...) = to_radians(ustrip(uconvert(u"rad", x)); kwargs...)
-function to_radians(x; kwargs...)
-	if _validtype(x, ValidAngle)
-		return map(x) do angAny
-			to_radians(angAny; kwargs...)
-		end
-	else
-		error("You can only call `to_radians` with scalar angle values or iterables containing angle values (from Unitful)")
-	end
-end
-
-"""
-	to_degrees(x::Real; rounding::RoundingMode = RoundNearest)
-
-Takes a real number (assumed to represent an angle in degrees) and normalizes it
-using `rem(x, 360, rounding)` to wrap the angle.
-
-See also: [`to_radians`](@ref), [`to_meters`](@ref)
-"""
-to_degrees(x::Real; rounding::RoundingMode = RoundNearest) = abs(x) <= 180 ? float(x) : rem(x, 360.0, rounding)
-"""
-	to_degrees(x::UnitfulAngleQuantity; rounding::RoundingMode = RoundNearest)
-
-Takes a Unitful Angular Quantity, transforms it to degrees and wraps the angle.
-This function basically does the following:\\
-`to_radians(ustrip(uconvert(u"deg", x)); rounding)`
-"""
-to_degrees(x::UnitfulAngleQuantity; kwargs...) = to_degrees(ustrip(uconvert(u"°", x)); kwargs...)
-function to_degrees(x; kwargs...)
-	if _validtype(x, ValidAngle)
-		return map(x) do angAny
-			to_degrees(angAny; kwargs...)
-		end
-	else
-		error("You can only call `to_degrees` with scalar angle values or iterables containing angle values (from Unitful)")
-	end
+# Do the common methods
+for fname in (:to_radians, :to_degrees)
+    # Function that does the rounding
+    eval(:($fname(x::ValidAngle, rounding::RoundingMode) = rem($fname(x), $fname(360°), rounding)))
+    # Function that takes the rounding-mode and returns a function that applies the specified rounding
+    eval(:($fname(rounding::RoundingMode) = x -> $fname(x, rounding)))
 end
 
-"""
-	to_meters(x::UnitfulLengthQuantity)
+## Lengths
 
-Takes a Unitful Length Quantity, transforms it to meters and strips the unit.
-This function basically does the following:\\
-`ustrip(uconvert(u"m", x))`
+to_length(unit::LengthUnit, x::Len) = uconvert(unit, float(x))
+to_length(unit::LengthUnit, x::Real) = to_length(unit, float(x) * u"m")
+to_length(unit::LengthUnit) = x -> to_length(unit, x)
 
-See also: [`to_radians`](@ref), [`to_degrees`](@ref)
-"""
-to_meters(x::Len) = uconvert(u"m", x) |> ustrip
-"""
-	to_meters(x::Real)
-Simply returns `x`. Just provided for consistency with the other method
-"""
-to_meters(x::Real) = x
-function to_meters(x)
-	if _validtype(x, ValidDistance)
-		return map(to_meters, x)
-	else
-		error("You can only call `to_meters` with scalar length or iterables containing distance values (from Unitful)")
-	end
-end
+to_meters(x::ValidDistance) = to_length(u"m")(x)
 
 # Logger
 """
