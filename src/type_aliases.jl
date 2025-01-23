@@ -1,3 +1,5 @@
+const Optional{T} = Union{T, NotProvided, NotSimulated}
+
 # helper type alias, taken from CoordRefSystems.jl
 const Len{T} = Quantity{T,u"𝐋"}
 const Met{T} = Quantity{T,u"𝐋",typeof(m)}
