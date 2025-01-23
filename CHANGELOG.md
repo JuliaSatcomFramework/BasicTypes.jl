@@ -9,3 +9,11 @@ Initial release of the BasicTypes.jl package.
 
 ### Added
 - Added the `Optional{T}` type alias, which is a union of `T`, `NotProvided`, and `NotSimulated`. This supersedes the `Maybe{T}` originally used in SatelliteSimulationToolkit.jl
+- A function `to_length` is now defined and export to convert and `ValidDistance` value into a `Unitful.Quantity` with the specified unit. `to_meters` is internally using `to_length` fixing `u"m"` as unit.
+
+### Changed
+- Compared to v0.1.0 of ReferenceViews.jl, the `to_degrees`, `to_radians` and `to_meters` functions now return Unitful quantitites (floating point) rather than unitless numbers.
+  - The `to_radians` and `to_degrees` functions now accept a `RoundingMode` as second argument (instead of as a kwarg). When called with a single argument, the function simply convert the input number without performing angular wrapping.
+
+### Removed
+- Compared to v0.1.0 of ReferenceViews.jl, `to_degrees`, `to_radians` and `to_meters` no longer have methods that accept non-scalar values as input.
