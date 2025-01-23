@@ -15,5 +15,5 @@
     @test to_degrees(RoundDown)(6.5π * rad) ≈ 90°
     @test to_degrees(-6.5π * rad, RoundToZero) ≈ -90°
 
-    @test to_meters(10km) ≈ 10000m
+    @test to_meters(10km) ≈ 10000m ≈ to_meters(1e4)
 end
