@@ -6,3 +6,6 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [1.0.0] - 2025-01-23
 Initial release of the BasicTypes.jl package.
+
+### Added
+- Added the `Optional{T}` type alias, which is a union of `T`, `NotProvided`, and `NotSimulated`. This supersedes the `Maybe{T}` originally used in SatelliteSimulationToolkit.jl
