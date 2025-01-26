@@ -41,3 +41,11 @@ Singleton type used for dispatch, and specifically to create function methods
 that return more than one output.
 """
 struct ExtraOutput end
+
+"""
+    struct NoTrait end
+
+Singleton type used to indicate that a trait is not implemented, resorting the
+eventual default behavior.
+"""
+struct NoTrait end

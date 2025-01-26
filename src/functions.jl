@@ -1,4 +1,42 @@
 """
+    constructor_without_checks(T, args...)
+Custom types `T` with inner constructors that do checks on inputs may want to
+implement a method for this function where `T` is the specific type and
+`args...` are just the fields of `T`.
+
+This method must be defined inside the struct definition and should simply
+return `new(args...)`, as a way to create an instance of the type without
+running the potentially expensive checks.
+
+This is especially useful for internal methods that might already know that the
+inputs are valid and within bounds, so they can skip the checks.
+
+# Example
+```julia
+struct MyType{T}
+    x::T
+    y::T
+    #= 
+    This is an unsafe constructor that skips all the input checks, we have this as our only inner constructor. 
+    The `CoordinateSystemsBase` is important (even if explicitly imported in the
+    parent module), or a local function with the same name will be created in
+    the local scope of the struct definition body.
+    =#
+    BasicTypes.constructor_without_checks(::Type{MyType{T}}, x::T, y::T) where T = new{T}(x, y)
+end
+# We define the constructor with checks as an outer one, but we could have also done this inside the struct definition
+function MyType{T}(x::T, y::T)
+    # do some input checks...
+    validated_x = check_x(x)
+    validated_y = check_y(y)
+    # Return the potentially modified inputs, if we had this as inner constructor this last line would be `new{T}(validated_x, validated_y)`
+    BasicTypes.constructor_without_checks(MyType{T}, validated_x, validated_y)
+end
+```
+"""
+function constructor_without_checks end
+
+"""
     to_radians(x::ValidAngle)
     to_radians(x::ValidAngle, rounding::RoundingMode)
 
