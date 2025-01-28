@@ -4,6 +4,13 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-01-28
+
+### Added
+- Added the `NoTrait` type, which can be used to indicate the absence of a trait in type-based trait implementations.
+- Added the `constructor_without_checks` function, which can be used to define an inner constructor for which skips all checks and simply calls `new` inside. See the docstring for more details.
+
+
 ## [1.0.0] - 2025-01-23
 Initial release of the BasicTypes.jl package.
 
