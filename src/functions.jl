@@ -131,3 +131,18 @@ progress bar in the REPL without `TerminalLogger`.
 Outside of interactive sessions, it will simply return the current logger.
 """
 progress_logger() = isinteractive() ? tee_logger() : current_logger()
+
+# This function shall create the non-parametrzed subtype, used for simplifying adding methods to `StructArrays.similar_type`. The solution is taken from https://discourse.julialang.org/t/deparametrising-types/41939/4
+"""
+    basetype(t)
+
+Returns the type of `t`, removing type parameters if for parametric types (thus
+returning the more generic UnionAll type for `typeof(t)`)
+
+```julia
+basetype(rand(Complex{Float64})) === Complex
+```
+"""
+basetype(t::DataType) = t.name.wrapper
+basetype(t::UnionAll) = basetype(t.body)
+basetype(::T) where T = basetype(T)
