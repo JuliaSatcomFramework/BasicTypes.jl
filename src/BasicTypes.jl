@@ -20,4 +20,7 @@ include("constants.jl")
 include("functions.jl")
 export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype
 
+include("macros.jl")
+export @define_kwargs_defaults, @add_kwargs_defaults
+
 end
