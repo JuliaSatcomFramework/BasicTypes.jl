@@ -49,3 +49,11 @@ Singleton type used to indicate that a trait is not implemented, resorting the
 eventual default behavior.
 """
 struct NoTrait end
+
+
+"""
+    struct SkipChecks end
+
+Singleton type used for dispatch to indicate that a certain check should be skipped.
+"""
+struct SkipChecks end
