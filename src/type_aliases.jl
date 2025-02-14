@@ -1,3 +1,6 @@
+"""
+    Optional{T} = Union{T, NotProvided, NotSimulated}
+"""
 const Optional{T} = Union{T, NotProvided, NotSimulated}
 
 # helper type alias, taken from CoordRefSystems.jl

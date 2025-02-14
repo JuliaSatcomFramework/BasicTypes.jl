@@ -4,6 +4,23 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-01-31
+
+### Added
+- Added the `asdeg` and `stripdeg` functions, which convert between unitless radians and Unitful degrees. Mostly useful for internal use as trigonometric function on degrees (which are also called when doing e.g. `cos(90°)`) are slower than the same operation on radians, and also slower than doing first a conversion to unitless radians and then calling the trigonometric function.
+
+## [1.2.0] - 2025-01-30
+
+### Added
+- Added the `basetype` function, which returns the base type (without type parameters) of a given type.
+
+## [1.1.0] - 2025-01-28
+
+### Added
+- Added the `NoTrait` type, which can be used to indicate the absence of a trait in type-based trait implementations.
+- Added the `constructor_without_checks` function, which can be used to define an inner constructor for which skips all checks and simply calls `new` inside. See the docstring for more details.
+
+
 ## [1.0.0] - 2025-01-23
 Initial release of the BasicTypes.jl package.
 

@@ -131,3 +131,44 @@ progress bar in the REPL without `TerminalLogger`.
 Outside of interactive sessions, it will simply return the current logger.
 """
 progress_logger() = isinteractive() ? tee_logger() : current_logger()
+
+# This function shall create the non-parametrzed subtype, used for simplifying adding methods to `StructArrays.similar_type`. The solution is taken from https://discourse.julialang.org/t/deparametrising-types/41939/4
+"""
+    basetype(t)
+
+Returns the type of `t`, removing type parameters if for parametric types (thus
+returning the more generic UnionAll type for `typeof(t)`)
+
+```julia
+basetype(rand(Complex{Float64})) === Complex
+```
+"""
+basetype(t::DataType) = t.name.wrapper
+basetype(t::UnionAll) = basetype(t.body)
+basetype(::T) where T = basetype(T)
+
+"""
+    asdeg(x::Real)
+
+Convert the provided value assumed to be in radians to Unitful degrees.
+
+The [`stripdeg`](@ref) function performs the inverse operation.
+
+```julia
+asdeg(π) ≈ 180.0°
+```
+"""
+asdeg(x::Real) = rad2deg(x) * °
+
+"""
+    stripdeg(x::Deg)
+
+Strip the units from the provided `Deg` field and convert it to radians.
+
+The [`asdeg`](@ref) function performs the inverse operation.
+
+```julia
+stripdeg(180.0°) ≈ π
+```
+"""
+stripdeg(x::Deg) = x |> ustrip |> deg2rad

@@ -10,7 +10,7 @@ end
 where `T <: EmptyIterator` will simply do nothing.
 """
 abstract type EmptyIterator end
-Base.length(::EmptyIterator) = 0
+Base.length(::EmptyIterator) = return 0 # Need return to hit coverage
 Base.iterate(::EmptyIterator, state::Int=1) = nothing
 Base.eltype(::EmptyIterator) = Union{}
 Base.keys(::EmptyIterator) = Base.OneTo(0) # Required for `eachindex`

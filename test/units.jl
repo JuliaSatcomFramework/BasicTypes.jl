@@ -17,3 +17,10 @@
 
     @test to_meters(10km) ≈ 10000m ≈ to_meters(1e4)
 end
+
+@testitem "asdeg and stripdeg" begin
+    using BasicTypes: asdeg, stripdeg
+
+    @test asdeg(π) ≈ 180.0°
+    @test stripdeg(180.0°) ≈ π
+end

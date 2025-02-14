@@ -27,4 +27,12 @@ end
     @test tee_logger() isa TeeLogger
 end
 
+@testitem "Basetype" begin
+    using BasicTypes: basetype
+    @test basetype(rand(Complex{Float64})) === Complex
+    @test basetype(Complex) === Complex
+    @test basetype(Union{Int, Float64}) === Union
+    @test basetype(rand()) === Float64
+end
+
 @run_package_tests verbose=true
