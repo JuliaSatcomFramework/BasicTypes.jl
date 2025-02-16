@@ -15,6 +15,9 @@ end
         @test length(T()) == 0
         @test eachindex(T()) == Base.OneTo(0)
     end
+
+    using BasicTypes: SkipChecks
+    SkipChecks()
 end
 
 @testitem "Terminal Logger" begin

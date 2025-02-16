@@ -10,7 +10,7 @@ using Unitful: Unitful, °, rad, Quantity, Length, NoDims, m, km, @u_str, ustrip
 export °, km, @u_str, ustrip
 
 include("types.jl")
-export ExtraOutput, NotSimulated, NotProvided
+export ExtraOutput, NotSimulated, NotProvided, SkipChecks
 
 include("type_aliases.jl")
 export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Point3D, Deg, Rad, Met, Len, Optional
@@ -18,6 +18,9 @@ export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Poin
 include("constants.jl")
 
 include("functions.jl")
-export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype
+export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype, asdeg, stripdeg
+
+include("macros.jl")
+export @define_kwargs_defaults, @add_kwargs_defaults
 
 end
