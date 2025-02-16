@@ -4,11 +4,14 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
-## [1.4.0] - 2025-02-14
+## [1.4.0] - 2025-02-16
 
 ### Added
 - Added the `@add_kwargs_defaults` and `@define_kwargs_defaults` macros, which can be used to add default values to the keyword arguments of a function, especially useful when the same kwarg default is used in multiple functions.
 - Added the `SkipChecks` type, which can be used for dispatch to implement version of functions skipping at least some of the checks.
+
+### Changed
+- `asdeg` and `stripdeg` are now exported.
 
 ## [1.3.0] - 2025-01-31
 
