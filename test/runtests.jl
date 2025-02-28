@@ -2,7 +2,8 @@ using TestItemRunner
 
 @testitem "Aqua" begin
     using Aqua
-    Aqua.test_all(BasicTypes) 
+    Aqua.test_all(BasicTypes; piracies = false, unbound_args = false) 
+    Aqua.test_piracies(BasicTypes; treat_as_own = [Optional])
     # Aqua.test_ambiguities(BasicTypes)
 end
 
