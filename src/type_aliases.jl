@@ -3,6 +3,10 @@
 """
 const Optional{T} = Union{T, NotProvided, NotSimulated}
 
+# Add conversion with fallback to 
+Base.convert(::Type{Optional{T}}, x) where T = convert(T, x)
+Base.convert(::Type{Optional{T}}, x::Optional{T}) where T = x
+
 # helper type alias, taken from CoordRefSystems.jl
 const Len{T} = Quantity{T,u"𝐋"}
 const Met{T} = Quantity{T,u"𝐋",typeof(m)}

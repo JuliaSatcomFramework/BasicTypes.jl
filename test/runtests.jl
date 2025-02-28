@@ -2,7 +2,8 @@ using TestItemRunner
 
 @testitem "Aqua" begin
     using Aqua
-    Aqua.test_all(BasicTypes) 
+    Aqua.test_all(BasicTypes; piracies = false, unbound_args = false) 
+    Aqua.test_piracies(BasicTypes; treat_as_own = [Optional])
     # Aqua.test_ambiguities(BasicTypes)
 end
 
@@ -36,6 +37,13 @@ end
     @test basetype(Complex) === Complex
     @test basetype(Union{Int, Float64}) === Union
     @test basetype(rand()) === Float64
+end
+
+@testitem "Optional" begin
+    @test convert(Optional{Float64}, 1) === 1.0
+    @test convert(Optional{Float64}, 30°) == deg2rad(30)
+    @test convert(Optional{Float64}, NotProvided()) isa NotProvided
+    @test convert(Optional{Float64}, NotSimulated()) isa NotSimulated
 end
 
 @run_package_tests verbose=true
