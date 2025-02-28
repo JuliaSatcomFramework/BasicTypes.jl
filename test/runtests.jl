@@ -38,4 +38,11 @@ end
     @test basetype(rand()) === Float64
 end
 
+@testitem "Optional" begin
+    @test convert(Optional{Float64}, 1) === 1.0
+    @test convert(Optional{Float64}, 30°) == deg2rad(30)
+    @test convert(Optional{Float64}, NotProvided()) isa NotProvided
+    @test convert(Optional{Float64}, NotSimulated()) isa NotSimulated
+end
+
 @run_package_tests verbose=true
