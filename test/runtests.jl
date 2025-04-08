@@ -14,6 +14,7 @@ end
         @test collect(T()) == Union{}[]
         @test length(T()) == 0
         @test eachindex(T()) == Base.OneTo(0)
+        @test T <: Optional{Int}
     end
 
     using BasicTypes: SkipChecks

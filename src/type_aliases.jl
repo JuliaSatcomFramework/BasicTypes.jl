@@ -1,12 +1,14 @@
 """
-    Optional{T} = Union{T, NotProvided, NotSimulated}
-"""
-const Optional{T} = Union{T, NotProvided, NotSimulated}
-
-"""
     NotSet = Union{NotProvided, NotSimulated}
 """
 const NotSet = Union{NotProvided, NotSimulated}
+
+"""
+    Optional{T} = Union{T, NotProvided, NotSimulated}
+
+This type alias is used to represent an optional value, mostly for use as type of struct fields for which a default value (either `NotProvided` or `NotSimulated`) is expected and used as default in the type's constructor.
+"""
+const Optional{T} = Union{T, NotSet}
 
 # helper type alias, taken from CoordRefSystems.jl
 const Len{T} = Quantity{T,u"𝐋"}
