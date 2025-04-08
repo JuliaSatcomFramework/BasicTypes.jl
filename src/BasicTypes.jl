@@ -13,7 +13,7 @@ include("types.jl")
 export ExtraOutput, NotSimulated, NotProvided, SkipChecks
 
 include("type_aliases.jl")
-export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Point3D, Deg, Rad, Met, Len, Optional
+export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Point3D, Deg, Rad, Met, Len, Optional, NotSet
 
 include("constants.jl")
 
