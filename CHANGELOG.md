@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-04-08
+
+### Added
+- Added the `NotSet` type as `Union{NotProvided, NotSimulated}`
+
 ## [1.4.0] - 2025-02-16
 
 ### Added
