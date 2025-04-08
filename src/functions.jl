@@ -172,3 +172,33 @@ stripdeg(180.0°) ≈ π
 ```
 """
 stripdeg(x::Deg) = x |> ustrip |> deg2rad
+
+
+"""
+    isnotset(x)
+
+Return `true` if `x` is not set to a value. 
+(That is, `x` is either `NotProvided` or `NotSimulated`)
+"""
+isnotset(x) = x isa NotSet
+
+"""
+    fallback(x...)
+
+Return the first value in the arguments which is set, i.e. is not equal to `NotProvided` or `NotSimulated`.
+If no value is found, an `ArgumentError` is thrown.
+
+# Examples
+```
+julia> x = NotProvided()
+julia> y = NotSimulated()
+julia> z = 1.0
+julia> fallback(x, y, z)
+1.0
+```
+"""
+function fallback end
+
+fallback() = throw(ArgumentError("No value arguments present"))
+fallback(x::NotSet, y...) = fallback(y...)
+fallback(x::Any, y...) = x
