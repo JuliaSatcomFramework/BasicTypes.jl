@@ -4,6 +4,13 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.6.0] - 2025-04-08
+
+### Added
+- Added the `isnotset` function, checking whether a value is set. (Similar to `isnothing`)
+- Added the `fallback(x...)` function, returning the first value that is set. (Similar to `something(x...)`)
+- Added the `@fallback` macro, returning the first value that is set or throwing an error. (Similar to `@something`)
+
 ## [1.5.0] - 2025-04-08
 
 ### Added
