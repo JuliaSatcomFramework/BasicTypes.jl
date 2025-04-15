@@ -1,7 +1,7 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
 authors = ["Alberto Mengali <disberd@gmail.com>"]
-version = "1.6.0"
+version = "1.7.0"
 
 [deps]
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"

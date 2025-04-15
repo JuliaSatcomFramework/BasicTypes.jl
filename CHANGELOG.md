@@ -4,6 +4,14 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-04-14
+
+### Added
+- Added the `valuetype(x)` function, returning the underlying type of an object.
+- Added the `change_valuetype(::Type, x)` function, changing the underlying type of an object.
+- Added the `common_valuetype(::Type, ::Type, args...)` function, determining a common types for arguments with a fallback.
+- Added the `promote_valuetype(::Type, ::Type, args...)` function, converting argument to a common type with a fallback.
+
 ## [1.6.0] - 2025-04-08
 
 ### Added

@@ -23,4 +23,7 @@ export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_l
 include("macros.jl")
 export @define_kwargs_defaults, @add_kwargs_defaults, @fallback
 
+include("valuetype.jl")
+export valuetype, change_valuetype, common_valuetype, promote_valuetype
+
 end
