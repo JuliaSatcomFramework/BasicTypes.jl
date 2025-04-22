@@ -30,6 +30,7 @@
     @test common_valuetype(Integer, Int64, 1, 2) == Int64
     @test common_valuetype(Integer, Int64, 1, 2.0) == Int64  # Fallback to Int64
     @test common_valuetype(Real, Float64, [1, 2], [3.0, 4.0]) == Float64
+    @test common_valuetype(Real, Float64, NotProvided(), NotSimulated()) == Float64
 
     # Tests for promote_valuetype
     a, b = promote_valuetype(Real, Float64, 1, 2.0)
