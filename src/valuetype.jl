@@ -26,6 +26,7 @@ If `x` is a container type like `SVector{T}`, this will convert the elements of 
 function change_valuetype end
 change_valuetype(::Type{T}, x) where {T} = convert(T, x)::T
 change_valuetype(::Type{T}, x::SVector{N}) where {T, N} = convert(SVector{3, T}, x)
+change_valuetype(::Type{T}, x::NotSet) where {T} = x
 
 """
     common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args...)
@@ -45,7 +46,12 @@ The common value type of `args...`, or `DefaultType` if the common type is not a
 """
 function common_valuetype end
 function common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args::Vararg{Any, N}) where {BaseType, DefaultType, N}
-    T = promote_type(map(valuetype, args)...)
+    args_set = filter(x -> !isnotset(x), args)
+    if isempty(args_set)
+        return DefaultType
+    end
+
+    T = promote_type(map(valuetype, args_set)...)
     return T <: BaseType ? T : DefaultType
 end
 

@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+## [1.7.1] - 2025-04-22
+
+### Fixed
+- Handle `NotSet` types in `valuetype`
+
 ## [1.7.0] - 2025-04-14
 
 ### Added

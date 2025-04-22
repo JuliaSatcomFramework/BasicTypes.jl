@@ -1,6 +1,6 @@
 @testitem "valuetype" begin
     using StaticArrays, Unitful
-    using BasicTypes: valuetype, change_valuetype, common_valuetype, promote_valuetype
+    using BasicTypes: valuetype, change_valuetype, common_valuetype, promote_valuetype, NotProvided
 
     # Tests for valuetype
     @test valuetype(1) == Int
@@ -17,6 +17,7 @@
     @test change_valuetype(Int, 1.0) == 1
     @test typeof(change_valuetype(Float64, 1)) == Float64
     @test typeof(change_valuetype(Int, 1.0)) == Int
+    @test change_valuetype(Float64, NotProvided()) isa NotSet
     
     # Tests for SVector
     v = SVector{3, Int}(1, 2, 3)
