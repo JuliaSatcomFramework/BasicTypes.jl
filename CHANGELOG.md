@@ -4,6 +4,10 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## [Unreleased]
 
+### Added
+
+- Add const NamedTuple `CONSTANTS` with useful physical constants.
+  
 ## [1.7.1] - 2025-04-22
 
 ### Fixed
