@@ -16,6 +16,7 @@ include("type_aliases.jl")
 export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, Point3D, Deg, Rad, Met, Len, Optional, NotSet
 
 include("constants.jl")
+export CONSTANTS
 
 include("functions.jl")
 export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype, asdeg, stripdeg, isnotset, fallback
