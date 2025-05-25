@@ -19,7 +19,7 @@ include("constants.jl")
 export CONSTANTS
 
 include("functions.jl")
-export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype, asdeg, stripdeg, isnotset, fallback
+export to_length, to_meters, to_radians, to_degrees, terminal_logger, progress_logger, basetype, asdeg, stripdeg, isnotset, fallback, sa_type
 
 include("macros.jl")
 export @define_kwargs_defaults, @add_kwargs_defaults, @fallback

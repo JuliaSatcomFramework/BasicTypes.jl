@@ -112,7 +112,7 @@ to_meters(x::ValidDistance) = to_length(u"m")(x)
 
 Returns the global `TerminalLogger` to be used for logging progress bars via `ProgressLogging.jl` in the REPL.
 """
-function terminal_logger() 
+function terminal_logger()
     isassigned(TERMINAL_LOGGER) || (TERMINAL_LOGGER[] = TerminalLogger())
     return TERMINAL_LOGGER[]
 end
@@ -202,3 +202,57 @@ function fallback end
 fallback() = throw(ArgumentError("No value arguments present"))
 fallback(x::NotSet, y...) = fallback(y...)
 fallback(x::Any, y...) = x
+
+
+"""
+    sa_type(DT::DataType, N::Union{Int, TypeVar}; unwrap = T -> false)
+
+This is a helper function that simplifies creating concrete `StructArray` types for types within struct definitions.
+
+## Arguments
+- `DT::DataType`: The type of the struct to create the `StructArray` for.
+- `N::Union{Int, TypeVar}`: Specifies the dimensions of the array stored within the resulting `StructArray` type
+
+# Examples
+```julia
+struct ASD{G}
+    a::sa_type(Complex{G}, 3)
+end
+```
+is equivalent to
+```julia
+struct ASD{G}
+    a::StructArray{Complex{G}, 3, @NamedTuple{re::Array{G, 3}, im::Array{G, 3}}, Int64}
+end
+```
+
+!!! note
+    This function is defined inside an extension and is thus available only conditionally to the `StructArrays` package being explicitly imported
+
+# Extended Help
+
+The function supports unwrapping like in the `StructArray` constructor by providing the appropriate function as the `unwrap` keyword argument.
+
+It also supports a `TypeVar` as second argument instead of simply an Int. This is useful for creating complex composite types like in the example below.
+
+```julia
+@kwdef struct InnerField
+    a::Float64 = rand()
+    b::Complex{Float64} = rand(ComplexF64)
+end
+
+@kwdef struct CompositeStruct
+    inner::InnerField = InnerField()
+    int::Int = rand(1:10)
+end
+
+struct SAField{N}
+    sa::sa_type(CompositeStruct, N; unwrap=T -> (T <: InnerField))
+end
+
+saf = SAField(StructArray([CompositeStruct() for i in 1:3, j in 1:2]; unwrap = T -> (T <: InnerField)))
+```
+
+where the `SAField` type has a fully concrete type for it's field `sa` which would be quite complex to specify manually
+"""
+sa_type(U::UnionAll, args...; kwargs...) = throw(ArgumentError("The provided eltype `$U` is not fully parametrized and would result in an abstract `StructArray` type"))
