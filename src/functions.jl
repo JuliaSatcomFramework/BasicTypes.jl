@@ -233,7 +233,7 @@ end
 
 The function supports unwrapping like in the `StructArray` constructor by providing the appropriate function as the `unwrap` keyword argument.
 
-It also supports a `TypeVar` as second argument instead of simply an Int. This is useful for creating complex composite types like in the example below.
+It also supports a `TypeVar` as second argument instead of simply an `Int`. This is useful for creating complex composite types like in the example below.
 
 ```julia
 @kwdef struct InnerField
