@@ -3,6 +3,7 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
+## [1.9.0] - 2025-05-25
 
 ### Added
 - Added the `sa_type` function, which can be used to create a `StructArray` type providing the eltype and the number of dimensions. This is mostly useful for simplifying creating types of fields which holds `StructArray` elements in struct definitions.
