@@ -256,3 +256,19 @@ saf = SAField(StructArray([CompositeStruct() for i in 1:3, j in 1:2]; unwrap = T
 where the `SAField` type has a fully concrete type for it's field `sa` which would be quite complex to specify manually
 """
 sa_type(U::UnionAll, args...; kwargs...) = throw(ArgumentError("The provided eltype `$U` is not fully parametrized and would result in an abstract `StructArray` type"))
+
+"""
+    isprovided(x) -> Bool
+
+Check if the value `x` is not of type `NotProvided`.
+Returns `true` if `x` is provided, otherwise `false`.
+"""
+isprovided(x) = typeof(x) != NotProvided
+
+"""
+    issimulated(x) -> Bool
+
+Check if `x` is simulated by verifying its type is not `NotSimulated`.
+Returns `true` if `x` is simulated, `false` otherwise.
+"""
+issimulated(x) = typeof(x) != NotSimulated

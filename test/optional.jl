@@ -18,3 +18,39 @@
     @test isnotset(z) === false
 
 end
+
+@testitem "isprovided tests" begin
+    # Test with NotProvided type
+    @test !isprovided(NotProvided())
+    
+    # Test with regular types
+    @test isprovided(1)
+    @test isprovided("test")
+    @test isprovided(3.14)
+    
+    # Test with complex types
+    @test isprovided(Complex(1,2))
+    @test isprovided([1,2,3])
+    
+    # Test with nothing and missing
+    @test isprovided(nothing)
+    @test isprovided(missing)
+end
+
+@testitem "issimulated tests" begin
+    # Test with NotSimulated type
+    @test !issimulated(NotSimulated())
+    
+    # Test with regular types
+    @test issimulated(1)
+    @test issimulated("test")
+    @test issimulated(3.14)
+    
+    # Test with complex types
+    @test issimulated(Complex(1,2))
+    @test issimulated([1,2,3])
+    
+    # Test with nothing and missing
+    @test issimulated(nothing)
+    @test issimulated(missing)
+end
