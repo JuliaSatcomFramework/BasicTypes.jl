@@ -43,6 +43,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 ### Added
 - Added the `NotSet` type as `Union{NotProvided, NotSimulated}`
 
+## [1.4.1] - 2025-02-28
+
+### Added
+- Added convert for `Optional{T}` types, which will forward `convert(Optional{T}, x)` to `convert(T, x)`.
+
 ## [1.4.0] - 2025-02-16
 
 ### Added
