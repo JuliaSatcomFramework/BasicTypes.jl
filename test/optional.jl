@@ -62,3 +62,18 @@ end
     @test unwrap_optional(Float64) === Float64
     @test_throws ArgumentError unwrap_optional(Optional)
 end
+
+@testitem "getfield_oftype" begin
+    using BasicTypes: BasicTypes, getfield_oftype, Optional
+
+    @test getfield_oftype(MyType(1, 2.0, "test"), String) === "test"
+    @test getfield_oftype(MyType(1, 2.0, "test"), Int) === 1
+    @test getfield_oftype(MyType(1, 2.0, "test"), Float64) === 2.0
+    @test getfield_oftype(MyType(1, 2.0, "test"), ComplexF64) === nothing
+
+    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), Optional)
+    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotSet)
+    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotSimulated)
+    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotProvided)
+    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), Nothing)
+end
