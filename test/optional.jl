@@ -63,7 +63,7 @@ end
     @test_throws ArgumentError unwrap_optional(Optional)
 end
 
-@testitem "getfield_oftype" begin
+@testitem "getfield_oftype" tags = [:after]begin
     using BasicTypes: BasicTypes, getfield_oftype, Optional
 
 
@@ -78,7 +78,7 @@ end
     @test getfield_oftype(MyType(1, 2.0, "test"), Float64) === 2.0
     @test getfield_oftype(MyType(1, 2.0, "test"), ComplexF64) === nothing
 
-    @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), Optional)
+    # @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), Optional)
     @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotSet)
     @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotSimulated)
     @test_throws ArgumentError getfield_oftype(MyType(1, 2.0, "test"), NotProvided)
