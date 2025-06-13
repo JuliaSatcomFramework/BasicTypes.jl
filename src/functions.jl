@@ -336,13 +336,13 @@ julia> getfield_oftype(MyType(; a = 1, b = 2.0), ComplexF64)
 ```
 """
 @generated function getfield_oftype(object, target::Type{T}) where T
-	(T <: Union{Nothing, NotSet} || T === Optional) && return :(throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `$target` was provided as target type")))
-	nms = fieldnames(object)
-	tps = fieldtypes(object)
-	for i in eachindex(nms, tps)
-		nm = nms[i]
-		tp = tps[i] |> unwrap_optional
-		(tp <: T) && return :(getfield(object, $(QuoteNode(nm))))
-	end
-	return :(nothing)
+    (T <: Union{Nothing,NotSet} || T === Optional) && return :(throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `$target` was provided as target type")))
+    nms = fieldnames(object)
+    tps = fieldtypes(object)
+    for i in eachindex(nms, tps)
+        nm = nms[i]
+        tp = tps[i] |> unwrap_optional
+        (tp <: T) && return :(getfield(object, $(QuoteNode(nm))))
+    end
+    return :(nothing)
 end
