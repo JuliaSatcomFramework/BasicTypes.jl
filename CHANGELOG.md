@@ -2,6 +2,14 @@
 
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
+## [1.11.0] - 2025-06-13
+
+### Added
+- Added the `getfield_oftype` function which is a fast way to extract the first field of a struct whose type satisfies `fieldtype <: target_type`. Useful for custom extraction of items from complex structures
+
+### Fixed
+- Fixed a method for `change_valuetype` which hardcoded `3` when modifying valuetype of a `StaticVector`
+
 ## [1.10.0] - 2025-06-01
 
 ### Added

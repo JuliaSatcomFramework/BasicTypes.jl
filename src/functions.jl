@@ -272,3 +272,77 @@ Check if `x` is simulated by verifying its type is not `NotSimulated`.
 Returns `true` if `x` is simulated, `false` otherwise.
 """
 issimulated(x) = typeof(x) != NotSimulated
+
+"""
+    unwrap_optional(::Type)
+
+Function used to unwrap the type `T` from `Optional{T}`.
+If the provided type is not of the form `Optional{T}`, it simply returns it unchanged.
+
+!!! note
+    When calling this function with simply `Optional` as input, the function throws an error.
+
+```jldoctest
+julia> using BasicTypes: BasicTypes, unwrap_optional, Optional
+
+julia> unwrap_optional(Optional{Float32})
+Float32
+
+julia> unwrap_optional(Float64)
+Float64
+```
+"""
+unwrap_optional(T::Type) = T
+unwrap_optional(::Type{Optional{T}}) where {T} = T
+unwrap_optional(::Type{Optional}) = throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input"))
+
+
+"""
+    getfield_oftype(container, target_type::Type)
+
+Returns the first field of `container` which satisfy `field isa target_type`.
+
+If no field satisfying the condition is found, returns `nothing`.
+
+!!! note
+    This function can not be called with a `target_type === Optional` or `target_type <: Union{Nothing, NotSet}`.
+
+# Example
+
+```jldoctest
+julia> using BasicTypes
+
+julia> @kwdef struct MyType
+           a::Int
+           b::Float64
+           c::Optional{String} = NotProvided()
+       end
+MyType
+
+julia> getfield_oftype(MyType(1, 2.0, "test"), Int)
+1
+
+julia> getfield_oftype(MyType(1, 2.0, "test"), AbstractFloat)
+2.0
+
+julia> getfield_oftype(MyType(1, 2.0, "test"), String)
+"test"
+
+julia> getfield_oftype(MyType(; a = 1, b = 2.0), String)
+NotProvided()
+
+julia> getfield_oftype(MyType(; a = 1, b = 2.0), ComplexF64)
+
+```
+"""
+@generated function getfield_oftype(object, target::Type{T}) where T
+	(T <: Union{Nothing, NotSet} || T === Optional) && return :(throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `$target` was provided as target type")))
+	nms = fieldnames(object)
+	tps = fieldtypes(object)
+	for i in eachindex(nms, tps)
+		nm = nms[i]
+		tp = tps[i] |> unwrap_optional
+		(tp <: T) && return :(getfield(object, $(QuoteNode(nm))))
+	end
+	return :(nothing)
+end

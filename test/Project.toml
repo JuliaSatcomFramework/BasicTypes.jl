@@ -1,5 +1,6 @@
 [deps]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ProgressLogging = "33c8b6b6-d38a-422a-b730-caa89a2f386c"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
