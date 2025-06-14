@@ -25,7 +25,7 @@ If `x` is a container type like `SVector{T}`, this will convert the elements of 
 """
 function change_valuetype end
 change_valuetype(::Type{T}, x) where {T} = convert(T, x)::T
-change_valuetype(::Type{T}, x::SVector{N}) where {T, N} = convert(SVector{3, T}, x)
+change_valuetype(::Type{T}, x::SVector{N}) where {T, N} = convert(SVector{N, T}, x)
 change_valuetype(::Type{T}, x::NotSet) where {T} = x
 
 """

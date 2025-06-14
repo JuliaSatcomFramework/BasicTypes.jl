@@ -20,10 +20,12 @@
     @test change_valuetype(Float64, NotProvided()) isa NotSet
     
     # Tests for SVector
-    v = SVector{3, Int}(1, 2, 3)
-    v_float = change_valuetype(Float64, v)
-    @test typeof(v_float) <: SVector{3, Float64}
-    @test v_float == SVector{3, Float64}(1.0, 2.0, 3.0)
+    for N = 2:4
+        v = SVector(Tuple(1:N))
+        v_float = change_valuetype(Float64, v)
+        @test typeof(v_float) <: SVector{N, Float64}
+        @test v_float == SVector{N, Float64}(1:N)
+    end
 
     # Tests for common_valuetype
     @test common_valuetype(Real, Float64, 1, 2.0) == Float64

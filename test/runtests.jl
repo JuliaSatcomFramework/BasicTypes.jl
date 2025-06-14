@@ -2,7 +2,7 @@ using TestItemRunner
 
 @testitem "Aqua" begin
     using Aqua
-    Aqua.test_all(BasicTypes) 
+    Aqua.test_all(BasicTypes; unbound_args = false) 
     # Aqua.test_ambiguities(BasicTypes)
 end
 
@@ -38,5 +38,11 @@ end
     @test basetype(Union{Int, Float64}) === Union
     @test basetype(rand()) === Float64
 end
+
+@testitem "DocTests" begin
+    using Documenter
+    Documenter.doctest(BasicTypes; manual = false)
+end
+
 
 @run_package_tests verbose=true

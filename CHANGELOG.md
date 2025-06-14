@@ -2,6 +2,15 @@
 
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
+## Unreleased
+
+### Added
+- Added the `getproperty_oftype` function which provides fast way to extract the first field of a struct whose type satisfies `fieldtype <: target_type`, and optionally accepts as input a fallback function to try calling for extracting the desired property from an object. Useful for custom extraction of items from complex structures
+- Added a new singleton type `PropertyOrNothing{name}` whose instance acts as a functor and extracts property `name` from the `object` provided as input, or returns nothing if no property `name` is present in the provided object. This is mostly useful as a fallback for `getproperty_oftype`. 
+
+### Fixed
+- Fixed a method for `change_valuetype` which hardcoded `3` when modifying valuetype of a `StaticVector`
+
 ## [1.10.0] - 2025-06-01
 
 ### Added
