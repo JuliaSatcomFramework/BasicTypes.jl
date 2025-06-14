@@ -2,7 +2,7 @@
 
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
-## Unreleased
+## [1.11.0] - 2025-06-14
 
 ### Added
 - Added the `getproperty_oftype` function which provides fast way to extract the first field of a struct whose type satisfies `fieldtype <: target_type`, and optionally accepts as input a fallback function to try calling for extracting the desired property from an object. Useful for custom extraction of items from complex structures
