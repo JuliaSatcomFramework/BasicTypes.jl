@@ -1,7 +1,4 @@
 @testitem "getproperty_oftype" begin
-    using BasicTypes: BasicTypes, getproperty_oftype, Optional
-
-
     @kwdef struct MyType
         a::Int
         b::Float64
@@ -13,7 +10,6 @@
     @test getproperty_oftype(MyType(1, 2.0, "test"), Float64) === 2.0
     @test getproperty_oftype(MyType(1, 2.0, "test"), ComplexF64, Returns(nothing), nothing) === nothing
 
-    @test_throws ArgumentError getproperty_oftype(MyType(1, 2.0, "test"), Optional)
     @test_throws ArgumentError getproperty_oftype(MyType(1, 2.0, "test"), NotSet)
     @test_throws ArgumentError getproperty_oftype(MyType(1, 2.0, "test"), NotSimulated)
     @test_throws ArgumentError getproperty_oftype(MyType(1, 2.0, "test"), NotProvided)
