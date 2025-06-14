@@ -61,7 +61,7 @@ struct SkipChecks end
 """
     PropertyOrNothing{name}
 
-Singletone structure that can be used as a functor of the form:
+Singleton structure that can be used as a functor of the form:
 ```julia
 PropertyOrNothing{name}(object)
 ```
