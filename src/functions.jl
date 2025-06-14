@@ -297,15 +297,39 @@ unwrap_optional(::Type{Optional{T}}) where {T} = T
 unwrap_optional(::Type{Optional}) = throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input"))
 
 
+@generated function _getfield_oftype(object, target::Type{T}) where T
+    nms = fieldnames(object)
+    tps = fieldtypes(object)
+    for i in eachindex(nms, tps)
+        nm = nms[i]
+        tp = tps[i] |> unwrap_optional
+        (tp <: T) && return :(getfield(object, $(QuoteNode(nm))))
+    end
+    return :(nothing)
+end
+
+PropertyOrNothing(name::Symbol) = PropertyOrNothing{name}()
+
+(::PropertyOrNothing{name})(object) where {name} = hasproperty(object, name) ? getproperty(object, name) : nothing
+
 """
-    getfield_oftype(container, target_type::Type)
+    getproperty_oftype(container, target_type::Type, fallback, default)
+    getproperty_oftype(container, target_type::Type, fallback, exception::Exception)
+    getproperty_oftype(container, target_type::Type[, fallback]; exception::Exception)
 
-Returns the first field of `container` which satisfy `field isa target_type`.
+Returns the first field of `container` which satisfies `field isa target_type`.
 
-If no field satisfying the condition is found, returns `nothing`.
+!!! note
+    When the type of a specific field (as returned by `fieldtype`) is `Optional{T}` (with `T` being any arbitrary type), the function will actually tests for `T <: target_type` rather than `Optional{T} <: target_type`
+
+In case no field is found this way, the function will try to extract the desired property calling `fallback(container)`.
+
+If `fallback(container)` returns `nothing`, the function will finally return the provided `default`, or throw the provided `exception`.
 
 !!! note
     This function can not be called with a `target_type === Optional` or `target_type <: Union{Nothing, NotSet}`.
+
+The second method is a convenience methdo which allow customizing the default exception thrown when `fallback(container)` returns nothing, and defaults `fallback = Returns(nothing)`.
 
 # Example
 
@@ -316,33 +340,41 @@ julia> @kwdef struct MyType
            a::Int
            b::Float64
            c::Optional{String} = NotProvided()
-       end
-MyType
+       end;
 
-julia> getfield_oftype(MyType(1, 2.0, "test"), Int)
-1
-
-julia> getfield_oftype(MyType(1, 2.0, "test"), AbstractFloat)
-2.0
-
-julia> getfield_oftype(MyType(1, 2.0, "test"), String)
+julia> getproperty_oftype(MyType(1, 2.0, "test"), String) # Returns field `c`
 "test"
 
-julia> getfield_oftype(MyType(; a = 1, b = 2.0), String)
+julia> getproperty_oftype(MyType(; a = 1, b = 2.0), String) # Still returns `c` even if its value is not actually a String as its field is `Optional{String}`
 NotProvided()
 
-julia> getfield_oftype(MyType(; a = 1, b = 2.0), ComplexF64)
+julia> getproperty_oftype(MyType(; a = 1, b = 2.0), ComplexF64, PropertyOrNothing(:b)) # This will return field `:b` as fallback
+2.0
 
+julia> getproperty_oftype(MyType(; a = 1, b = 2.0), ComplexF64, PropertyOrNothing(:d), 15) # This will fail the type check and the fallback, and returns 15
+15
+
+julia> try
+           # This throws an error as it couldn't find a field with the right type and has no fallback
+           getproperty_oftype((; a = 1), String; exception = ArgumentError("OPS"))
+       catch e
+           e.msg
+       end
+"OPS"
 ```
 """
-@generated function getfield_oftype(object, target::Type{T}) where T
-    (T <: Union{Nothing,NotSet} || T === Optional) && return :(throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `$target` was provided as target type")))
-    nms = fieldnames(object)
-    tps = fieldtypes(object)
-    for i in eachindex(nms, tps)
-        nm = nms[i]
-        tp = tps[i] |> unwrap_optional
-        (tp <: T) && return :(getfield(object, $(QuoteNode(nm))))
+@inline function getproperty_oftype(object, target_type::Type{T}, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {T, F}
+    getproperty_oftype(object, T, fallback, exception)
+end
+
+@inline function getproperty_oftype(object, target_type::Type{T}, fallback, default) where {T}
+    (T <: Union{Nothing,NotSet} || T === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $T` was provided as input"))
+    if default isa Exception
+        @something _getfield_oftype(object, T) fallback(object) throw(default)
+    elseif default === nothing
+        intermediate = @something _getfield_oftype(object, T) fallback(object) missing
+        @coalesce intermediate nothing
+    else
+        @something _getfield_oftype(object, T) fallback(object) default
     end
-    return :(nothing)
 end
