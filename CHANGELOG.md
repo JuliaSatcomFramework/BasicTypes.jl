@@ -2,6 +2,14 @@
 
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
+## Unreleased
+
+### Fixed
+- Changed internals of `getproperty_oftype` to fix some errors, most notably that having structure with untyped field as input would throw an error.
+
+### Added
+- Added possibility of specifying whether to use `<:` or `===` to compare field types with `target_type` in `getproperty_oftype`. (still experimental, not documented)
+
 ## [1.11.0] - 2025-06-14
 
 ### Added
