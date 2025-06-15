@@ -292,9 +292,11 @@ julia> unwrap_optional(Float64)
 Float64
 ```
 """
-unwrap_optional(T::Type) = T
-unwrap_optional(::Type{Optional{T}}) where {T} = T
-unwrap_optional(::Type{Optional}) = throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input"))
+unwrap_optional(T::Type) = T === Any ? T : _unwrap_optional(T)
+
+# We need to do this indirection to special case for T === Any, otherwise T = Any would fall in the method with signature below
+_unwrap_optional(::Type{Optional{T}}) where {T} = T === Any ? throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input")) : T
+_unwrap_optional(T::Type) = T
 
 
 @generated function _getfield_oftype(object, target::Type{T}) where T
