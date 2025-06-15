@@ -57,21 +57,3 @@ struct NoTrait end
 Singleton type used for dispatch to indicate that a certain check should be skipped.
 """
 struct SkipChecks end
-
-"""
-    PropertyOrNothing{name}
-
-Singleton structure that can be used as a functor of the form:
-```julia
-PropertyOrNothing{name}(object)
-```
-to extract the property `name` from the provided object, falling back to returning `nothing` if the provided object does not have a property called `name`. 
-
-This is mostly useful as a fallback (or part of a fallback) to be used with [`getproperty_oftype`](@ref).
-"""
-struct PropertyOrNothing{name} 
-    function PropertyOrNothing{name}() where {name}
-        name isa Symbol || throw(ArgumentError("You can only use `Symbol` values as type parameter `name` for instantiating a `PropertyOrNothing` object"))
-        return new{name}()
-    end
-end
