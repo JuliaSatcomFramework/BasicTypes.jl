@@ -23,11 +23,17 @@ unwrap_optional(T::Type) = T === Any ? T : _unwrap_optional(T)
 _unwrap_optional(::Type{Optional{T}}) where {T} = T === Any ? throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input")) : T
 _unwrap_optional(T::Type) = T
 
+# We define these explicitly to avoid relying on the internal `instance` field of the function type to get the instance 
+_f_from_type(::typeof(<:)) = <:
+_f_from_type(::typeof(===)) = ===
 
-@generated function _getfield_oftype(object, comparison::Union{typeof(<:), typeof(===), typeof(>:)}, target::Type{T}) where T
+const VALID_COMPARISONS = Union{typeof(<:), typeof(===)}
+
+
+@generated function _getfield_oftype(object, comparison::VALID_COMPARISONS, target::Type{T}) where T
     nms = fieldnames(object)
     tps = fieldtypes(object)
-    f = comparison.instance
+    f = _f_from_type(comparison)
     for i in eachindex(nms, tps)
         nm = nms[i]
         tp = tps[i] |> unwrap_optional
@@ -116,8 +122,6 @@ end
 @inline function getproperty_oftype(object, target_type, fallback, default)
     getproperty_oftype(object, <:, target_type, fallback, default)
 end
-
-const VALID_COMPARISONS = Union{typeof(<:), typeof(===)}
 
 # This for the moment we keep undocumented
 @inline function getproperty_oftype(object, comparison::VALID_COMPARISONS, target_type::Type, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {F}
