@@ -4,6 +4,8 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [1.11.1] - 2025-06-18
+
 ### Fixed
 - Changed internals of `getproperty_oftype` to fix some errors, most notably that having structure with untyped field as input would throw an error.
 
