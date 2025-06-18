@@ -56,9 +56,10 @@ end
 end
 
 @testitem "unwrap_optional" begin
-    using BasicTypes: BasicTypes, unwrap_optional, getfield_oftype, Optional
+    using BasicTypes: BasicTypes, unwrap_optional, Optional
 
     @test unwrap_optional(Optional{Float32}) === Float32
+    @test unwrap_optional(Any) === Any
     @test unwrap_optional(Float64) === Float64
     @test_throws ArgumentError unwrap_optional(Optional)
 end
