@@ -48,10 +48,16 @@ julia> 1km |> enforce_unit(u"m") ∘ float # Test the method returning a functio
 See also: [`enforce_unitless`](@ref)
 """
 enforce_unit(reference::Units, value::Quantity) = uconvert(reference, value)
-enforce_unit(reference::Type{<:Quantity}, value::Quantity) = convert(reference, value)
+function enforce_unit(reference::Type{<:Quantity}, value::Quantity)
+    (isconcretetype(reference) && isconcretetype(valuetype(reference))) || throw(ArgumentError("The provided Quantity type to use as reference is not concrete"))
+    return convert(reference, value)
+end
 
 # Version that takes a unitless number and returns it 
-enforce_unit(reference::Type{<:Quantity}, value::Number) = return reference(value) # Create the instance directly
+function enforce_unit(reference::Type{<:Quantity}, value::Number)
+    (isconcretetype(reference) && isconcretetype(valuetype(reference))) || throw(ArgumentError("The provided Quantity type to use as reference is not concrete"))
+    return reference(value) # Create the instance directly
+end
 enforce_unit(reference::Units, value::Number) = reference * value
 
 # This is a fallback if one provides a quantity instance directly as reference
