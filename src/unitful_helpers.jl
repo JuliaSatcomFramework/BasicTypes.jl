@@ -40,9 +40,9 @@ julia> enforce_unit(u"km", 3u"m") # This will not enforce precision
 
 julia> enforce_unit(u"km", 3) # This will simply apply the desired unit to the provided value
 3 km
+```
 
 See also: [`enforce_unitless`](@ref)
-```
 """
 enforce_unit(reference::Units, value::Quantity) = uconvert(reference, value)
 enforce_unit(reference::Type{<:Quantity}, value::Quantity) = convert(reference, value)
@@ -72,3 +72,37 @@ See [`enforce_unit`](@ref) for more details on the supported argument types and 
 """
 enforce_unitless(reference, value) = ustrip(enforce_unit(reference, value))
 enforce_unitless(reference) = Base.Fix1(enforce_unitless, reference)
+
+
+#### Helpers specifically for angles ####
+"""
+    asdeg(x::Real)
+
+Convert the provided value assumed to be in radians to Unitful degrees.
+
+The [`stripdeg`](@ref) function performs the inverse operation.
+
+```jldoctest
+julia> using BasicTypes
+
+julia> asdeg(π)
+180.0°
+```
+"""
+asdeg(x::Real) = rad2deg(x) * °
+
+"""
+    stripdeg(x::Deg)
+
+Strip the units from the provided value (expected to be a `Unitful.Quantity` in degrees) and convert it to radians.
+
+The [`asdeg`](@ref) function performs the inverse operation.
+
+```jldoctest
+julia> using BasicTypes
+
+julia> stripdeg(180.0°)
+3.141592653589793
+```
+"""
+stripdeg(x::Deg) = x |> ustrip |> deg2rad
