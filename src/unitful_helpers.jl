@@ -5,7 +5,7 @@
 Takes the provided `value` (supposed to represent a quantity tied to a specific unit) and converts it so that it to the unit provided as `reference`.
 
 !!! note
-    The provided `reference` must be a unit compatible with the unit expected from `value`.
+    The provided `reference` must represent a unit compatible with the unit expected from `value`.
 
 In case only `reference` is provided (second signature above), this function simply returns `Base.Fix1(enforce_unit, reference)`.
 
