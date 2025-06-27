@@ -8,6 +8,9 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 ### Added
 - Added two new generic function `enforce_unit` and `enforce_unitless` to converts between compatible units and ensure a return value that has either a unit or not in its type. See the docstrings for more details
 
+### Deprecated
+- The `to_length` and `to_meters` are now deprecated in favor of direct use of `enforce_unit`. The docstrings as well as their execution will not print a warning. These will be removed in a future breaking release.
+
 ## [1.11.1] - 2025-06-18
 
 ### Fixed
