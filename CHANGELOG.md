@@ -3,6 +3,10 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
+## [1.12.0] - 2025-06-27
+
+### Added
+- Added two new generic function `enforce_unit` and `enforce_unitless` to converts between compatible units and ensure a return value that has either a unit or not in its type. See the docstrings for more details
 
 ## [1.11.1] - 2025-06-18
 
