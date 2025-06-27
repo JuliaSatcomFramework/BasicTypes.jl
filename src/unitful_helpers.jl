@@ -106,3 +106,89 @@ julia> stripdeg(180.0°)
 ```
 """
 stripdeg(x::Deg) = x |> ustrip |> deg2rad
+
+"""
+    to_radians(x::ValidAngle)
+    to_radians(x::ValidAngle, rounding::RoundingMode)
+    to_radians(rounding::RoundingMode)
+
+Take one scalar value representing an angle and convert it to floating point Unitful quantities with radian (`rad`) units.
+
+!!! note
+    The input angles provided as unitless numbers are treated as degrees.
+
+The 2-arg method can be used to also wrap (using `rem`) the angle provided as first argument using the rounding mode specified as second argument.
+
+The last method taking a single `RoundingMode` argument is equivalent to `Base.Fix2(to_radians, rounding)`.
+
+See also: [`to_degrees`](@ref), [`enforce_unit`](@ref)
+"""
+to_radians(x::Real) = deg2rad(x) * rad
+to_radians(x::UnitfulAngleQuantity) = uconvert(rad, float(x))
+
+"""
+    to_degrees(x::ValidAngle)
+    to_degrees(x::ValidAngle, rounding::RoundingMode)
+    to_degrees(rounding::RoundingMode)
+
+Take one scalar valid angle and convert it to floating point Unitful quantities with degree (`°`) units.
+
+!!! note
+    The input angles provided as unitless numbers are treated as degrees.
+
+The 2-arg method can be used to also wrap (using `rem`) the angle provided as first argument using the rounding mode specified as second argument.
+
+The last method taking a single `RoundingMode` argument is equivalent to `Base.Fix2(to_degrees, rounding)`.
+
+See also: [`to_radians`](@ref), [`enforce_unit`](@ref)
+"""
+to_degrees(value::ValidAngle) = enforce_unit(°, float(value))
+
+# Do the common methods
+for fname in (:to_radians, :to_degrees)
+    # Function that does the rounding
+    eval(:($fname(x::ValidAngle, rounding::RoundingMode) = rem($fname(x), $fname(360°), rounding)))
+    # Function that takes the rounding-mode and returns a function that applies the specified rounding
+    eval(:($fname(rounding::RoundingMode) = Base.Fix2($fname, rounding)))
+end
+
+
+#### Deprecated length functions ####
+
+"""
+    to_length(unit::LengthUnit, x::ValidDistance)
+    to_length(unit::LengthUnit)
+
+!!! warn
+    This function is deprecated now, consider using the more explicit form `enforce_unit(unit, float(x))` instead.
+
+
+Take one scalar value representing a length and convert it to floating point Unitful quantities with the specified `LengthUnit` `unit`.
+
+The single-argument method taking a single `LengthUnit` argument is equivalent to `Base.Fix1(to_length, unit)`.
+
+See also: [`to_meters`](@ref), [`to_radians`](@ref), [`to_degrees`](@ref)
+"""
+function to_length(unit)
+    @warn "`to_length(unit)` is deprecated, consider using the more explicit form `enforce_unit(unit) ∘ float` instead"
+    return Base.Fix1(to_length, unit)
+end
+function to_length(unit, x::ValidDistance)
+    @warn "`to_length(unit, x)` is deprecated, consider using the more explicit form `enforce_unit(unit, float(x))` instead"
+    return enforce_unit(unit, float(x))
+end
+
+"""
+    to_meters(x::ValidDistance)
+
+!!! warn
+    This function is deprecated now, use directly the new signature `enforce_unit(u"m", x)` instead.
+
+Take one scalar value representing a length and convert it to floating point Unitful quantities with the `m` unit.
+
+See also: [`to_length`](@ref), [`to_radians`](@ref), [`to_degrees`](@ref)
+"""
+function to_meters(x::ValidDistance)
+    @warn "to_meters is deprecated, use the new and more generic `enforce_unit(u\"m\", x)` instead"
+    return enforce_unit(u"m", x)
+end
