@@ -40,6 +40,9 @@ julia> enforce_unit(u"km", 3u"m") # This will not enforce precision
 
 julia> enforce_unit(u"km", 3) # This will simply apply the desired unit to the provided value
 3 km
+
+julia> 1km |> enforce_unit(u"m") ∘ float # Test the method returning a function
+1000.0 m
 ```
 
 See also: [`enforce_unitless`](@ref)
@@ -68,7 +71,22 @@ This will simply call `ustrip(enforce_unit(reference, value))`.
 
 If only `reference` is provided (second signature above), this function simply returns `Base.Fix1(enforce_unitless, reference)`.
 
-See [`enforce_unit`](@ref) for more details on the supported argument types and examples
+See [`enforce_unit`](@ref) for more details on the supported argument types.
+
+# Examples
+
+```jldoctest
+julia> using BasicTypes
+
+julia> enforce_unitless(1f0u"m", 1km)
+1000.0f0
+
+julia> enforce_unitless(u"m", 1)
+1
+
+julia> 1km |> enforce_unitless(u"m") ∘ float # Test the method returning a function
+1000.0
+```
 """
 enforce_unitless(reference, value) = ustrip(enforce_unit(reference, value))
 enforce_unitless(reference) = Base.Fix1(enforce_unitless, reference)
