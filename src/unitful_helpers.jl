@@ -51,7 +51,7 @@ enforce_unit(reference::Units, value::Quantity) = uconvert(reference, value)
 enforce_unit(reference::Type{<:Quantity}, value::Quantity) = convert(reference, value)
 
 # Version that takes a unitless number and returns it 
-enforce_unit(reference::Type{<:Quantity}, value::Number) = reference(value) # Create the instance directly
+enforce_unit(reference::Type{<:Quantity}, value::Number) = return reference(value) # Create the instance directly
 enforce_unit(reference::Units, value::Number) = reference * value
 
 # This is a fallback if one provides a quantity instance directly as reference
