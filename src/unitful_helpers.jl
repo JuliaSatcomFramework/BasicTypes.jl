@@ -4,7 +4,7 @@
     
 Takes the provided `value` (supposed to represent a quantity tied to a specific unit) and converts it so that it to the unit provided as `reference`.
 
-!!! note Unit
+!!! note
     The provided `reference` must be a unit compatible with the unit expected from `value`.
 
 In case only `reference` is provided (second signature above), this function simply returns `Base.Fix1(enforce_unit, reference)`.
@@ -24,7 +24,7 @@ In case only `reference` is provided (second signature above), this function sim
 julia> using BasicTypes
 
 julia> enforce_unit(u"m", 2f0 * u"km/h") # Throws are units are not compatible
-ERROR: DimensionError: m and km J^-1 s^-1 are not dimensionally compatible.
+ERROR: DimensionError:
 
 julia> enforce_unit(typeof(1f0u"m"), 1km) # Also converts to Float32 as the provided reference is a Float32 quantity
 1000.0f0 m
@@ -33,7 +33,7 @@ julia> enforce_unit(1f0u"rad", 10°) # Also converts to Float32 as the provided 
 0.17453292f0 rad
 
 julia> enforce_unit(1u"km", 3u"m") # Providing a quantity directly also tries to enforce the precision
-ERROR: InexactError: Int64(3//1000)
+ERROR: InexactError:
 
 julia> enforce_unit(u"km", 3u"m") # This will not enforce precision
 3//1000 km
@@ -160,7 +160,7 @@ end
     to_length(unit::LengthUnit)
 
 !!! warn
-    This function is deprecated now, consider using the more explicit form `enforce_unit(unit, float(x))` instead.
+    This function is deprecated now, consider using the more explicit form `enforce_unit(unit, float(x))` (or `enforce_unit(unit) ∘ float` for the single-argument method) instead.
 
 
 Take one scalar value representing a length and convert it to floating point Unitful quantities with the specified `LengthUnit` `unit`.
