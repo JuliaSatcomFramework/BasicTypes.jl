@@ -44,3 +44,16 @@
     @test a == 1 && b == 2
     
 end
+
+@testitem "CoordRefSystems extension" begin
+    using CoordRefSystems
+    using BasicTypes
+
+
+    for CRS in (LatLon, Cartesian)
+        ref = CRS(1,2)
+        @test valuetype(ref) === Float64
+        @test valuetype(ref |> change_valuetype(Float32)) === Float32
+        @test valuetype(ref |> change_valuetype(Float32) |> change_valuetype(Float64)) === Float64
+    end
+end

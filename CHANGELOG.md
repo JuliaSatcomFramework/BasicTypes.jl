@@ -3,6 +3,13 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
+## [1.13.0] - 2025-06-27
+
+### Added
+- Added a convenience method `change_valuetype(type) = Base.Fix1(change_valuetype, type)`.
+- Added support for `valuetype` to `CoordRefSystems.CRS` instances via extension
+
+
 ## [1.12.0] - 2025-06-27
 
 ### Added
