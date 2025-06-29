@@ -8,6 +8,10 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 ### Added
 - Added a convenience method `change_valuetype(type) = Base.Fix1(change_valuetype, type)`.
 - Added support for `valuetype` to `CoordRefSystems.CRS` instances via extension
+- Added support for `valuetype` to the following types from `Meshes`:
+  - `Point`
+  - `Domain`
+  - `Geometry`
 
 
 ## [1.12.0] - 2025-06-27
