@@ -1,7 +1,7 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
 authors = ["Alberto Mengali <disberd@gmail.com>"]
-version = "1.12.0"
+version = "1.13.0"
 
 [deps]
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
@@ -11,14 +11,20 @@ TerminalLoggers = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [weakdeps]
+CoordRefSystems = "b46f11dc-f210-4604-bfba-323c1ec968cb"
+Meshes = "eacbb407-ea5a-433e-ab97-5258b1ca43fa"
 StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 
 [extensions]
 StructArraysExt = "StructArrays"
+CoordRefSystemsExt = "CoordRefSystems"
+MeshesExt = "Meshes"
 
 [compat]
+CoordRefSystems = "0.16 - 0.18"
 Logging = "1"
 LoggingExtras = "1.1.0"
+Meshes = "0.51 - 0.53"
 StaticArrays = "1.9.10"
 StructArrays = "0.7.1"
 TerminalLoggers = "0.1.7"

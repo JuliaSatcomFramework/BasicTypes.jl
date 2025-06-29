@@ -17,16 +17,20 @@ valuetype(::Type{<:AbstractArray{T}}) where T = T
 
 """
     change_valuetype(::Type{T}, x)
+    change_valuetype(type::Type)
 
 Change the type of the value contained in `x` to `T`.
 
 If `x` is a primitive type like `Number`, this will convert `x` to `T` and return it.
 If `x` is a container type like `SVector{T}`, this will convert the elements of `x` to `T`.
+
+The second method with just a single argument being a `type::Type` is simply a convenience method equivalent to `Base.Fix1(change_valuetype, type)`
 """
 function change_valuetype end
 change_valuetype(::Type{T}, x) where {T} = convert(T, x)::T
 change_valuetype(::Type{T}, x::SVector{N}) where {T, N} = convert(SVector{N, T}, x)
 change_valuetype(::Type{T}, x::NotSet) where {T} = x
+change_valuetype(type::Type) = Base.Fix1(change_valuetype, type)
 
 """
     common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args...)

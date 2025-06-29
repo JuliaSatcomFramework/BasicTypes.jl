@@ -44,3 +44,36 @@
     @test a == 1 && b == 2
     
 end
+
+@testitem "CoordRefSystems extension" begin
+    using CoordRefSystems
+    using BasicTypes
+
+
+    for CRS in (LatLon, Cartesian)
+        ref = CRS(1,2)
+        @test valuetype(ref) === Float64
+        @test valuetype(ref |> change_valuetype(Float32)) === Float32
+        @test valuetype(ref |> change_valuetype(Float32) |> change_valuetype(Float64)) === Float64
+    end
+end
+
+@testitem "Meshes extension" begin
+    using CoordRefSystems
+    using Meshes
+    using BasicTypes: BasicTypes, change_valuetype, valuetype
+
+    for crs in (LatLon, Cartesian2D)
+        p = rand(Meshes.Point; crs)
+        @test valuetype(p) === Float64
+        @test valuetype(p |> change_valuetype(Float32)) === Float32
+        @test valuetype(p |> change_valuetype(Float32)) === Float32
+        @test valuetype(p |> change_valuetype(Float32) |> change_valuetype(Float64)) === Float64
+
+        geom = rand(PolyArea; crs)
+        @test valuetype(geom) === Float64
+
+        dmn = rand(PolyArea, 10; crs) |> GeometrySet
+        @test valuetype(dmn) == Float64
+    end
+end
