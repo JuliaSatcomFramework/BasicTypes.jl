@@ -3,6 +3,11 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
+## [1.14.0] - 2025-07-09
+
+### Added
+- Added the `ScopedRefValue` type, which behaves like a `ScopedValue` but whose value can also be changed persistently outside of `with` calls.
+
 ## [1.13.0] - 2025-06-27
 
 ### Added
