@@ -2,6 +2,7 @@ module BasicTypes
 
 using Logging: Logging, current_logger
 using LoggingExtras: LoggingExtras, TeeLogger
+using Base.ScopedValues: ScopedValues, ScopedValue
 using StaticArrays: StaticArrays, SVector
 using TerminalLoggers: TerminalLoggers, TerminalLogger
 using Unitful: Unitful, °, rad, Quantity, Length, NoDims, m, km, @u_str, 
@@ -16,6 +17,9 @@ export ExtraOutput, NotSimulated, NotProvided, SkipChecks
 include("type_aliases.jl")
 export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, 
     Point3D, Deg, Rad, Met, Len, Optional, NotSet
+
+include("scopedrefvalue.jl")
+export ScopedRefValue
 
 include("unitful_helpers.jl")
 export enforce_unit, enforce_unitless
