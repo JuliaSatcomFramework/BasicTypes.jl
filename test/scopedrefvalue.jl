@@ -11,6 +11,11 @@
 
     sv = ScopedRefValue{Float64}(3.0)
 
+    @test sv[] == 3
+
+    sv[] = 15
+    @test sv[] == 15
+
     ScopedValues.with(sv => 1.0) do
         @test sv[] === 1.0
     end

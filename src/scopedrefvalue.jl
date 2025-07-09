@@ -37,7 +37,7 @@ ScopedRefValue{T}() where T = ScopedRefValue{T}(Ref{T}(), ScopedValue{T}())
 ScopedRefValue{T}(x) where T = ScopedRefValue{T}(Ref{T}(x), ScopedValue{T}())
 ScopedRefValue(x) = ScopedRefValue{typeof(x)}(x)
 
-Base.setindex!(sv::ScopedRefValue, x) = setindex!(sv.ref, x)
+Base.setindex!(sv::ScopedRefValue, x) = return setindex!(sv.ref, x)
 ScopedValues.get(sv::ScopedRefValue) = ScopedValues.get(scoped(sv))
 
 Base.getindex(sv::ScopedRefValue) = @something ScopedValues.get(sv) getindex(sv.ref)
