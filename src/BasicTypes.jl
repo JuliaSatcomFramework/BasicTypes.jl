@@ -20,6 +20,7 @@ export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D,
 
 include("scopedrefvalue.jl")
 export ScopedRefValue
+public with
 
 include("unitful_helpers.jl")
 export enforce_unit, enforce_unitless
