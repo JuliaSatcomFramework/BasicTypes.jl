@@ -7,12 +7,14 @@ Return the type of the underlying value contained in `x`.
 
 For primitive types like `Number`, this is the type of `x` itself.
 For container types like `AbstractArray{T}`, this is `T`.
+
+For any type that does not explicitly have a custom method for `valuetype`, the default is to return `Union{}`.
 """
 function valuetype end
 valuetype(::Type{<:Quantity{T}}) where T  = T
 valuetype(::Type{T}) where T <: Real = T
 valuetype(::T) where T = valuetype(T)
-valuetype(T::DataType) = error("The valuetype function is not implemented for type $T")
+valuetype(T::DataType) = Union{}
 valuetype(::Type{<:AbstractArray{T}}) where T = T
 valuetype(::Type{ScopedRefValue{T}}) where T = T
 
@@ -48,16 +50,25 @@ If the promoted value type of `args...` is not a subtype of `BaseType`, then `De
 
 # Returns
 The common value type of `args...`, or `DefaultType` if the common type is not a subtype of `BaseType`.
+
+# Examples
+```jldoctest
+julia> using BasicTypes: common_valuetype
+
+julia> common_valuetype(AbstractFloat, Float64, 1, 2)
+Float64
+
+julia> common_valuetype(AbstractFloat, Float64, "what", 2f0) # For the string, `valuetype` returns `Union{}` so it' bypassed by during promotion
+Float32
+
+julia> common_valuetype(AbstractFloat, Float64, "what") # Still use default in case `Union{}` is the only returned valuetype
+Float64
+```
 """
 function common_valuetype end
 function common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args::Vararg{Any, N}) where {BaseType, DefaultType, N}
-    args_set = filter(x -> !isnotset(x), args)
-    if isempty(args_set)
-        return DefaultType
-    end
-
-    T = promote_type(map(valuetype, args_set)...)
-    return T <: BaseType ? T : DefaultType
+    T = promote_type(map(valuetype, args)...)
+    return T <: BaseType ? bypass_bottom(T, DefaultType) : DefaultType
 end
 
 """

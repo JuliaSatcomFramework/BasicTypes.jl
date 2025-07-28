@@ -74,9 +74,9 @@ returning the more generic UnionAll type for `typeof(t)`)
 basetype(rand(Complex{Float64})) === Complex
 ```
 """
-basetype(t::DataType) = t.name.wrapper
-basetype(t::UnionAll) = basetype(t.body)
-basetype(::T) where T = basetype(T)
+basetype(T::Type) = return Base.typename(T).wrapper
+basetype(::Union) = return Union
+basetype(::T) where T = return basetype(T)
 
 
 
@@ -178,3 +178,12 @@ Check if `x` is simulated by verifying its type is not `NotSimulated`.
 Returns `true` if `x` is simulated, `false` otherwise.
 """
 issimulated(x) = typeof(x) != NotSimulated
+
+"""
+    bypass_bottom(candidate::Type, fallback::Type)
+
+This function takes as input two types, a `candidate` and a `fallback`, and returns `candidate` unless `candidate === Union{}` in which case it returns `fallback`.
+"""
+bypass_bottom(candidate::Type, fallback::Type) = return candidate
+bypass_bottom(::typeof(Union{}), fallback::Type) = return fallback
+bypass_bottom(::typeof(Union{}), ::typeof(Union{})) = throw(ArgumentError("Cannot call the `bypass_bottom` function with `Union{}` as both first and second argument."))

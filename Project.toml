@@ -1,7 +1,7 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
 authors = ["Alberto Mengali <disberd@gmail.com>"]
-version = "1.14.0"
+version = "1.15.0"
 
 [deps]
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
@@ -24,7 +24,7 @@ MeshesExt = "Meshes"
 CoordRefSystems = "0.16 - 0.18"
 Logging = "1"
 LoggingExtras = "1.1.0"
-Meshes = "0.51 - 0.53"
+Meshes = "0.51 - 0.54"
 StaticArrays = "1.9.10"
 StructArrays = "0.7.1"
 TerminalLoggers = "0.1.7"
