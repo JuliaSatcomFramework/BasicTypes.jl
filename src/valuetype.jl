@@ -7,12 +7,14 @@ Return the type of the underlying value contained in `x`.
 
 For primitive types like `Number`, this is the type of `x` itself.
 For container types like `AbstractArray{T}`, this is `T`.
+
+For any type that does not explicitly have a custom method for `valuetype`, the default is to return `Union{}`.
 """
 function valuetype end
 valuetype(::Type{<:Quantity{T}}) where T  = T
 valuetype(::Type{T}) where T <: Real = T
 valuetype(::T) where T = valuetype(T)
-valuetype(T::DataType) = error("The valuetype function is not implemented for type $T")
+valuetype(T::DataType) = Union{}
 valuetype(::Type{<:AbstractArray{T}}) where T = T
 valuetype(::Type{ScopedRefValue{T}}) where T = T
 
@@ -55,9 +57,14 @@ function common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args::Vararg{An
     if isempty(args_set)
         return DefaultType
     end
-
     T = promote_type(map(valuetype, args_set)...)
-    return T <: BaseType ? T : DefaultType
+    if T === Union{}
+        return DefaultType
+    elseif T <: BaseType
+        return T
+    else
+        return DefaultType
+    end
 end
 
 """
