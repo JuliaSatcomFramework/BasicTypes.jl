@@ -74,9 +74,9 @@ returning the more generic UnionAll type for `typeof(t)`)
 basetype(rand(Complex{Float64})) === Complex
 ```
 """
-basetype(T::Type) = Base.typename(T).wrapper
-basetype(::Union) = Union
-basetype(::T) where T = basetype(T)
+basetype(T::Type) = return Base.typename(T).wrapper
+basetype(::Union) = return Union
+basetype(::T) where T = return basetype(T)
 
 
 
