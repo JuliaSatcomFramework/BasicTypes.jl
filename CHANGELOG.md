@@ -3,6 +3,18 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
+
+## [1.14.0] - 2025-07-28
+### Changed
+- Changed the default method for `valuetype` to return `Union{}` instead of throwing an error. This allows more flexible use of `common_valuetype` 
+  - It is not considered a breaking change as erroring was never documented as official behaviour.
+
+### Added
+- Added a new public but non-exported function `bypass_bottom`. Used now internally in `common_valuetype` to fallback to the default type in case first returned type is `Union{}` (i.e. `Base.Bottom` hence the name)
+
+### Fixed
+- Change internal implementation of `basetype` to follow the one in `ConstructionsBase.jl` which has better type inference.
+
 ## [1.14.0] - 2025-07-09
 
 ### Added
