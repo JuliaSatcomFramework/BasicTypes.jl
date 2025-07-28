@@ -75,6 +75,7 @@ basetype(rand(Complex{Float64})) === Complex
 ```
 """
 basetype(T::Type) = Base.typename(T).wrapper
+basetype(::Union) = Union
 basetype(::T) where T = basetype(T)
 
 
