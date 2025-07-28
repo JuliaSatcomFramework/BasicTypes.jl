@@ -53,11 +53,7 @@ The common value type of `args...`, or `DefaultType` if the common type is not a
 """
 function common_valuetype end
 function common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args::Vararg{Any, N}) where {BaseType, DefaultType, N}
-    args_set = filter(x -> !isnotset(x), args)
-    if isempty(args_set)
-        return DefaultType
-    end
-    T = promote_type(map(valuetype, args_set)...)
+    T = promote_type(map(valuetype, args)...)
     if T === Union{}
         return DefaultType
     elseif T <: BaseType
