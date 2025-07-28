@@ -183,6 +183,6 @@ issimulated(x) = typeof(x) != NotSimulated
 
 This function takes as input two types, a `candidate` and a `fallback`, and returns `candidate` unless `candidate === Union{}` in which case it returns `fallback`.
 """
-bypass_bottom(candidate::Type, fallback::Type) = candidate
-bypass_bottom(::typeof(Union{}), fallback::Type) = fallback
+bypass_bottom(candidate::Type, fallback::Type) = return candidate
+bypass_bottom(::typeof(Union{}), fallback::Type) = return fallback
 bypass_bottom(::typeof(Union{}), ::typeof(Union{})) = throw(ArgumentError("Cannot call the `bypass_bottom` function with `Union{}` as both first and second argument."))

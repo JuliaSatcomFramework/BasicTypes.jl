@@ -50,6 +50,20 @@ If the promoted value type of `args...` is not a subtype of `BaseType`, then `De
 
 # Returns
 The common value type of `args...`, or `DefaultType` if the common type is not a subtype of `BaseType`.
+
+# Examples
+```jldoctest
+julia> using BasicTypes: common_valuetype
+
+julia> common_valuetype(AbstractFloat, Float64, 1, 2)
+Float64
+
+julia> common_valuetype(AbstractFloat, Float64, "what", 2f0) # For the string, `valuetype` returns `Union{}` so it' bypassed by during promotion
+Float32
+
+julia> common_valuetype(AbstractFloat, Float64, "what") # Still use default in case `Union{}` is the only returned valuetype
+Float64
+```
 """
 function common_valuetype end
 function common_valuetype(::Type{BaseType}, ::Type{DefaultType}, args::Vararg{Any, N}) where {BaseType, DefaultType, N}
