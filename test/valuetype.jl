@@ -10,7 +10,7 @@
     @test valuetype([1, 2, 3]) == Int
     @test valuetype(Array{Float64, 2}) == Float64
     @test valuetype(1.0u"m") == Float64
-    @test_throws ErrorException valuetype("string")
+    @test valuetype("string") == Union{}
 
     # Tests for change_valuetype
     @test change_valuetype(Float64, 1) == 1.0
@@ -33,6 +33,8 @@
     @test common_valuetype(Integer, Int64, 1, 2.0) == Int64  # Fallback to Int64
     @test common_valuetype(Real, Float64, [1, 2], [3.0, 4.0]) == Float64
     @test common_valuetype(Real, Float64, NotProvided(), NotSimulated()) == Float64
+    @test common_valuetype(Real, Float64, "string") == Float64
+    @test common_valuetype(Real, Float64, String, 1f0) == Float32
 
     # Tests for promote_valuetype
     a, b = promote_valuetype(Real, Float64, 1, 2.0)
