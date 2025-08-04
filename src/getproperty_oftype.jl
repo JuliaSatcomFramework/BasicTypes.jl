@@ -29,17 +29,18 @@ _f_from_type(::Type{typeof(===)}) = ===
 
 const VALID_COMPARISONS = Union{typeof(<:), typeof(===)}
 
+const FIELDNAME_NOT_FOUND_SYMBOL = :_field_of_type_not_found_
 
-@generated function _getfield_oftype(object, comparison::VALID_COMPARISONS, target::Type{T}) where T
-    nms = fieldnames(object)
-    tps = fieldtypes(object)
+@generated function fieldname_oftype(::Type{O}, comparison::VALID_COMPARISONS, target::Type{T}) where {O, T}
+    nms = fieldnames(O)
+    tps = fieldtypes(O)
     f = _f_from_type(comparison)
     for i in eachindex(nms, tps)
         nm = nms[i]
         tp = tps[i] |> unwrap_optional
-        f(tp, T) && return :(getfield(object, $(QuoteNode(nm))))
+        f(tp, T) && return QuoteNode(nm)
     end
-    return :(nothing)
+    return QuoteNode(FIELDNAME_NOT_FOUND_SYMBOL)
 end
 
 """
@@ -129,12 +130,14 @@ end
 end
 @inline function getproperty_oftype(object, comparison::VALID_COMPARISONS, target::Type, fallback, default)
     (target <: Union{Nothing,NotSet} || target === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $target` was provided as input"))
+    fname = fieldname_oftype(typeof(object), comparison, target)
+    fname === FIELDNAME_NOT_FOUND_SYMBOL || return getfield(object, fname)
     if default isa Exception
-        @something _getfield_oftype(object, comparison, target) fallback(object) throw(default)
+        return @something fallback(object) throw(default)
     elseif default === nothing
-        intermediate = @something _getfield_oftype(object, comparison, target) fallback(object) missing
-        @coalesce intermediate nothing
+        intermediate = @something fallback(object) missing
+        return @coalesce intermediate nothing
     else
-        @something _getfield_oftype(object, comparison, target) fallback(object) default
+        return @something fallback(object) default
     end
 end
