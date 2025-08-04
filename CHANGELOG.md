@@ -4,7 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
-## [1.14.0] - 2025-07-28
+## [1.16.0] - 2025-08-04
+### Changed
+Change the internal of `getproperty_oftype`. The underlying generated function now simply extract the fieldname from the a type instead of already extracting the field from an instance.
+
+## [1.15.0] - 2025-07-28
 ### Changed
 - Changed the default method for `valuetype` to return `Union{}` instead of throwing an error. This allows more flexible use of `common_valuetype` 
   - It is not considered a breaking change as erroring was never documented as official behaviour.
