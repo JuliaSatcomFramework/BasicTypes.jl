@@ -17,12 +17,11 @@ julia> unwrap_optional(Float64)
 Float64
 ```
 """
-# We need to do this indirection to special case for T === Any, otherwise T = Any would fall in the method with signature below
-_unwrap_optional(T::Type) = return T
-function _unwrap_optional(U::Union)
+unwrap_optional(T::Type) = return T
+function unwrap_optional(U::Union)
     (; a, b) = U
     b <: NotSet && return a
-    a <: NotSet && return _unwrap_optional(b)
+    a <: NotSet && return unwrap_optional(b)
     return U
 end
 
@@ -42,7 +41,7 @@ If the second argument is a type, this simply translates to the following compar
 ```
 """
 function fieldname_oftype(OBJ::Type, comparison::F) where F
-    idx = findfirst(comparison ∘ _unwrap_optional, fieldtypes(OBJ))
+    idx = findfirst(comparison ∘ unwrap_optional, fieldtypes(OBJ))
     idx === nothing && return FIELDNAME_NOT_FOUND_SYMBOL
     return fieldname(OBJ, idx)
 end

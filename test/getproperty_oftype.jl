@@ -4,6 +4,19 @@
     using InteractiveUtils
     using TestAllocations
     using Test
+
+    function codeinfo(func, args...)
+        ci, _ = @code_typed func(args...)
+        return ci
+    end
+    function compare_ci(ci1, ci2)
+        # When doing test with coverage, the code typed output is littered with Expr(:code_coverage_effect). So we remove those. We also skip comparing the last return statement as the actual slot number being returned will be different depending on the line of coverage considered
+        is_coverage_expr(x) = x == Expr(:code_coverage_effect)
+        isvalid(x) = !is_coverage_expr(x) && !(x isa Core.ReturnNode)
+        code1 = filter(isvalid, ci1.code)
+        code2 = filter(isvalid, ci2.code)
+        return code1 == code2
+    end
 end
 
 @testitem "getproperty_oftype" begin
@@ -68,9 +81,9 @@ end
     end
     # This basically checks that the output of @code_typed with field_oftype is equivalent to just accessing the field
     function test_noruntime(obj, fname::Symbol, comparison; check_values = true)
-        ci1, _ = @code_typed field_oftype(obj, comparison)
-        ci2, _ = @code_typed FieldGetter(fname)(obj)
-        @test ci1.code == ci2.code
+        ci1 = codeinfo(field_oftype, obj, comparison)
+        ci2 = codeinfo(FieldGetter(fname), obj)
+        @test compare_ci(ci1, ci2)
         # We test that the function does not allocate
         @test @nallocs(field_oftype(obj, comparison)) == 0
         @test @nallocs(field_oftype(typeof(obj), comparison)) == 0
