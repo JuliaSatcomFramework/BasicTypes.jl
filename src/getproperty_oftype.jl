@@ -17,11 +17,14 @@ julia> unwrap_optional(Float64)
 Float64
 ```
 """
-unwrap_optional(T::Type) = T === Any ? T : _unwrap_optional(T)
-
 # We need to do this indirection to special case for T === Any, otherwise T = Any would fall in the method with signature below
-_unwrap_optional(::Type{Optional{T}}) where {T} = T === Any ? throw(ArgumentError("You can't call `unwrap_optional` with `Optional` (without a type parameter) as input")) : T
-_unwrap_optional(T::Type) = T
+_unwrap_optional(T::Type) = return T
+function _unwrap_optional(U::Union)
+    (; a, b) = U
+    b <: NotSet && return a
+    a <: NotSet && return _unwrap_optional(b)
+    return U
+end
 
 # We define these explicitly to avoid relying on the internal `instance` field of the function type to get the instance 
 const FIELDNAME_NOT_FOUND_SYMBOL = :_field_of_type_not_found_
@@ -142,13 +145,13 @@ julia> try
 "OPS"
 ```
 """
-@inline function getproperty_oftype(object, comparison::C, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {C, F}
+function getproperty_oftype(object, comparison::C, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {C, F}
     getproperty_oftype(object, comparison, fallback, exception)
 end
-@inline function getproperty_oftype(object, comparison, fallback, default)
-    if comparison isa Type
-        (comparison <: Union{Nothing,NotSet} || comparison === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $comparison` was provided as input"))
-    end
+function getproperty_oftype(object, comparison, fallback, default)
+    # if comparison isa Type
+    #     (comparison <: Union{Nothing,NotSet} || comparison === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $comparison` was provided as input"))
+    # end
     out = field_oftype(object, comparison)
     out isa NotFound || return out
     fallback_value = fallback(object)
