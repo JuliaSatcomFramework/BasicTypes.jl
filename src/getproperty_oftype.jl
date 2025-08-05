@@ -31,16 +31,47 @@ const VALID_COMPARISONS = Union{typeof(<:), typeof(===)}
 
 const FIELDNAME_NOT_FOUND_SYMBOL = :_field_of_type_not_found_
 
-@generated function fieldname_oftype(::Type{O}, comparison::VALID_COMPARISONS, target::Type{T}) where {O, T}
-    nms = fieldnames(O)
-    tps = fieldtypes(O)
-    f = _f_from_type(comparison)
-    for i in eachindex(nms, tps)
-        nm = nms[i]
-        tp = tps[i] |> unwrap_optional
-        f(tp, T) && return QuoteNode(nm)
-    end
-    return QuoteNode(FIELDNAME_NOT_FOUND_SYMBOL)
+"""
+    fieldname_oftype(OBJ::Type, comparison::Function)
+    fieldname_oftype(OBJ::Type, supertype::Type)
+
+Extracts the field name of the first field of the type `OBJ` for which `comparison(fieldtype) === true`.
+If no field satisfying the comparison function is found, this simply return a dummy Symbol (whose value is stored inside the package-internal constant global `FIELDNAME_NOT_FOUND_SYMBOL`).
+
+If the second argument is a type, this simply translates to the following comparison function:
+```julia
+    comparison = T -> T <: supertype
+```
+"""
+function fieldname_oftype(OBJ::Type, comparison::F) where F
+    idx = findfirst(comparison ∘ _unwrap_optional, fieldtypes(OBJ))
+    idx === nothing && return FIELDNAME_NOT_FOUND_SYMBOL
+    return fieldname(OBJ, idx)
+end
+
+"""
+    field_oftype(obj, comparison)
+    field_oftype(OBJ::Type, comparison)
+
+Function that leverages `fieldname_oftype` to extract the field (or field type in case type is passed as first argument) returned by `fieldname_oftype(typeof(obj), comparison)`
+
+In case no field satisfying the comparison is found, this function returns an instance of the singleton type `NotFound` defined within this package.
+
+This is the base of the `getproperty_oftype` function and should basically completely resolve at compile time allowing flexible property access without runtime penalty.
+"""
+function field_oftype(obj, second::F) where {F}
+    fname = fieldname_oftype(typeof(obj), second)::Symbol
+    fname === FIELDNAME_NOT_FOUND_SYMBOL && return NotFound()
+    return Base.getfield(obj, fname)
+end
+function field_oftype(obj::Type, second::F) where {F}
+    fname = fieldname_oftype(obj, second)::Symbol
+    fname === FIELDNAME_NOT_FOUND_SYMBOL && return NotFound()
+    return Base.fieldtype(obj, fname)
+end
+
+function fieldname_oftype(::Type{O}, ::Type{T}) where {O, T}
+    return fieldname_oftype(O, Base.Fix2(<:, T))
 end
 
 """
@@ -63,7 +94,7 @@ end
 
 PropertyOrNothing(name::Symbol) = PropertyOrNothing{name}()
 
-(::PropertyOrNothing{name})(object) where {name} = hasproperty(object, name) ? getproperty(object, name) : nothing
+(::PropertyOrNothing{name})(object) where {name} = hasproperty(object, name) ? Base.getproperty(object, name) : nothing
 
 """
     getproperty_oftype(container, target_type::Type, fallback, default)
@@ -116,28 +147,25 @@ julia> try
 "OPS"
 ```
 """
-@inline function getproperty_oftype(object, target_type::Type, fallback = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted"))
-    getproperty_oftype(object, <:, target_type, fallback; exception)
+@inline function getproperty_oftype(object, comparison::C, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {C, F}
+    getproperty_oftype(object, comparison, fallback, exception)
 end
-
-@inline function getproperty_oftype(object, target_type, fallback, default)
-    getproperty_oftype(object, <:, target_type, fallback, default)
-end
-
-# This for the moment we keep undocumented
-@inline function getproperty_oftype(object, comparison::VALID_COMPARISONS, target_type::Type, fallback::F = Returns(nothing); exception::Exception = ArgumentError("The desired property could not be extracted")) where {F}
-    getproperty_oftype(object, comparison, target_type, fallback, exception)
-end
-@inline function getproperty_oftype(object, comparison::VALID_COMPARISONS, target::Type, fallback, default)
-    (target <: Union{Nothing,NotSet} || target === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $target` was provided as input"))
-    fname = fieldname_oftype(typeof(object), comparison, target)
-    fname === FIELDNAME_NOT_FOUND_SYMBOL || return getfield(object, fname)
+@inline function getproperty_oftype(object, comparison, fallback, default)
+    if comparison isa Type
+        (comparison <: Union{Nothing,NotSet} || comparison === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $comparison` was provided as input"))
+    end
+    out = field_oftype(object, comparison)
+    out isa NotFound || return out
+    fallback_value = fallback(object)
+    if default isa Function
+        default = default()
+    end
     if default isa Exception
-        return @something fallback(object) throw(default)
+        return @something fallback_value throw(default)
     elseif default === nothing
-        intermediate = @something fallback(object) missing
+        intermediate = @something fallback_value missing
         return @coalesce intermediate nothing
     else
-        return @something fallback(object) default
+        return @something fallback_value default
     end
 end

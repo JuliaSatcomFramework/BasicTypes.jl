@@ -35,6 +35,13 @@ should be skipped during the simulation (without relying on `nothing` or
 struct NotSimulated <: EmptyIterator end
 
 """
+    NotFound
+
+Singletone type used as return type of some functions in this package to clearly identified that the desired output could not be found
+"""
+struct NotFound end
+
+"""
     ExtraOutput
 
 Singleton type used for dispatch, and specifically to create function methods
