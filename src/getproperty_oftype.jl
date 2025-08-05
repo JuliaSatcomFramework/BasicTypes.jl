@@ -24,11 +24,6 @@ _unwrap_optional(::Type{Optional{T}}) where {T} = T === Any ? throw(ArgumentErro
 _unwrap_optional(T::Type) = T
 
 # We define these explicitly to avoid relying on the internal `instance` field of the function type to get the instance 
-_f_from_type(::Type{typeof(<:)}) = <:
-_f_from_type(::Type{typeof(===)}) = ===
-
-const VALID_COMPARISONS = Union{typeof(<:), typeof(===)}
-
 const FIELDNAME_NOT_FOUND_SYMBOL = :_field_of_type_not_found_
 
 """
