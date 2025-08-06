@@ -41,6 +41,7 @@ If the second argument is a type, this simply translates to the following compar
 ```
 """
 function fieldname_oftype(OBJ::Type, comparison::F) where F
+    Base.@assume_effects :foldable
     idx = findfirst(comparison ∘ unwrap_optional, fieldtypes(OBJ))
     idx === nothing && return FIELDNAME_NOT_FOUND_SYMBOL
     return fieldname(OBJ, idx)
@@ -59,12 +60,12 @@ This is the base of the `getproperty_oftype` function and should basically compl
 function field_oftype(obj, second::F) where {F}
     fname = fieldname_oftype(typeof(obj), second)::Symbol
     fname === FIELDNAME_NOT_FOUND_SYMBOL && return NotFound()
-    return Base.getfield(obj, fname)
+    return getfield(obj, fname)
 end
 function field_oftype(obj::Type, second::F) where {F}
     fname = fieldname_oftype(obj, second)::Symbol
     fname === FIELDNAME_NOT_FOUND_SYMBOL && return NotFound()
-    return Base.fieldtype(obj, fname)
+    return fieldtype(obj, fname)
 end
 
 function fieldname_oftype(::Type{O}, ::Type{T}) where {O, T}
@@ -91,7 +92,7 @@ end
 
 PropertyOrNothing(name::Symbol) = PropertyOrNothing{name}()
 
-(::PropertyOrNothing{name})(object) where {name} = hasproperty(object, name) ? Base.getproperty(object, name) : nothing
+(::PropertyOrNothing{name})(object) where {name} = hasproperty(object, name) ? getproperty(object, name) : nothing
 
 """
     getproperty_oftype(container, target_type::Type, fallback, default)
@@ -148,9 +149,9 @@ function getproperty_oftype(object, comparison::C, fallback::F = Returns(nothing
     getproperty_oftype(object, comparison, fallback, exception)
 end
 function getproperty_oftype(object, comparison, fallback, default)
-    # if comparison isa Type
-    #     (comparison <: Union{Nothing,NotSet} || comparison === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $comparison` was provided as input"))
-    # end
+    if comparison isa Type
+        (comparison <: Union{Nothing,NotSet} || comparison === Optional) && throw(ArgumentError("You can't call this function with a target type `T <: Union{Nothing, NotSet}` or `T === Optional`, and `target_type = $comparison` was provided as input"))
+    end
     out = field_oftype(object, comparison)
     out isa NotFound || return out
     fallback_value = fallback(object)

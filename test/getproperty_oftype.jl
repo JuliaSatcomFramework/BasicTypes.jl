@@ -5,17 +5,32 @@
     using TestAllocations
     using Test
 
+    ##### Functions copied from MacroTools.jl ####
+    walk(x, inner, outer) = outer(x)
+    walk(x::Expr, inner, outer) = outer(Expr(x.head, map(inner, x.args)...))
+    prewalk(f, x)  = walk(f(x), x -> prewalk(f, x), identity)
+    ##### End of MacroTools.jl functions ####
+
     function codeinfo(func, args...)
         ci, _ = @code_typed func(args...)
-        return ci
-    end
-    function compare_ci(ci1, ci2)
         # When doing test with coverage, the code typed output is littered with Expr(:code_coverage_effect). So we remove those. We also skip comparing the last return statement as the actual slot number being returned will be different depending on the line of coverage considered
         is_coverage_expr(x) = x == Expr(:code_coverage_effect)
-        isvalid(x) = !is_coverage_expr(x) && !(x isa Core.ReturnNode)
-        code1 = filter(isvalid, ci1.code)
-        code2 = filter(isvalid, ci2.code)
-        return code1 == code2
+        isvalid(x) = !is_coverage_expr(x) && !(x isa Core.ReturnNode) && !(x isa Nothing)
+        # Remove invalid expressions
+        filter!(isvalid, ci.code)
+        # We now go do some processing of the expression to normalize it
+        for i in eachindex(ci.code)
+            ci.code[i] = prewalk(ci.code[i]) do ex
+                if ex isa GlobalRef
+                    return ex.mod === BasicTypes ? ex.name : ex
+                elseif ex isa Core.Argument
+                    return ci.slotnames[ex.n]
+                else
+                    return ex
+                end
+            end
+        end
+        return ci.code
     end
 end
 
@@ -74,19 +89,20 @@ end
 
     long = LONG()
 
-    struct FieldGetter{S} end
-    FieldGetter(s::Symbol) = FieldGetter{s}()
-    function (::FieldGetter{S})(obj) where S 
-        return hasfield(typeof(obj), S) ? Base.getfield(obj, S) : NotFound()
-    end
     # This basically checks that the output of @code_typed with field_oftype is equivalent to just accessing the field
-    function test_noruntime(obj, fname::Symbol, comparison; check_values = true)
-        ci1 = codeinfo(field_oftype, obj, comparison)
-        ci2 = codeinfo(FieldGetter(fname), obj)
-        @test compare_ci(ci1, ci2)
+    function test_noruntime(obj, fname::Symbol, comparison; check_values = true, check_allocs = VERSION > v"1.11.99")
+        cinfo = codeinfo(field_oftype, obj, comparison)
+        if length(cinfo) > 0 # If we don't have any output is because we had a fully constant folded code just returning an value/expression.
+            # Here we check 
+            ex = :(getfield(obj, $(QuoteNode(fname))))
+            @test only(cinfo) == ex
+        end
         # We test that the function does not allocate
-        @test @nallocs(field_oftype(obj, comparison)) == 0
-        @test @nallocs(field_oftype(typeof(obj), comparison)) == 0
+        if check_allocs
+            # We don't check on 1.11 as the @nallocs can't properly do constant propagation/folding
+            @test @nallocs(field_oftype(obj, comparison)) == 0
+            @test @nallocs(field_oftype(typeof(obj), comparison)) == 0
+        end
         if check_values
             # We also test that the code is actually also giving the correct output
             @test field_oftype(obj, comparison) === getfield(long, fname)
@@ -113,9 +129,9 @@ end
     @test field_oftype(LONG, NTuple{3}) === NotFound()
 
     # We now test directly getproperty_oftype
-    @test @nallocs(getproperty_oftype(long, String)) == 0
+    @test @nallocs(getproperty_oftype(long, $String)) == 0
     @test @nallocs(getproperty_oftype(long, T -> T == Real)) == 0
 
     @test getproperty_oftype(long, NTuple{3}, Returns(3.0)) === 3.0
-    @test @nallocs(getproperty_oftype(long, NTuple{3}, Returns(3.0))) == 0
+    @test @nallocs(getproperty_oftype(long, $(NTuple{3}), Returns(3.0))) == 0
 end
