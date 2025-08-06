@@ -4,6 +4,13 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [1.17.0] - 2025-08-05
+### Added
+- Added a new singleton type `NotFound` which is not exported and used internally for resolving properties not found in `getproperty_oftype`.
+
+### Changed
+Changed again the internal of `getproperty_oftype`, removing the `@generated` function and making the internal machinery more flexible.
+
 ## [1.16.0] - 2025-08-04
 ### Changed
 Change the internal of `getproperty_oftype`. The underlying generated function now simply extract the fieldname from the a type instead of already extracting the field from an instance.

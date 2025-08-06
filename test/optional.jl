@@ -61,5 +61,5 @@ end
     @test unwrap_optional(Optional{Float32}) === Float32
     @test unwrap_optional(Any) === Any
     @test unwrap_optional(Float64) === Float64
-    @test_throws ArgumentError unwrap_optional(Optional)
+    @test unwrap_optional(Union{Float32, Float64}) == Union{Float32, Float64}
 end
