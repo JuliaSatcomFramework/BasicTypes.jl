@@ -25,6 +25,32 @@ function unwrap_optional(U::Union)
     return U
 end
 
+
+"""
+    fieldidx_oftype(OBJ::Type, comparison::Function)
+    fieldidx_oftype(OBJ::Type, supertype::Type)
+
+Extracts the field index of the first field of the type `OBJ` for which `comparison(fieldtype) === true`.
+If no field satisfying the comparison function is found, this simply return -1 to keep the function type stable (always returning an `Int`).
+
+If the second argument is a type, this simply translates to the following comparison function:
+```julia
+    comparison = T -> T <: supertype
+```
+
+!!! note
+    Since v1.18.0, this function is used within the implementation of `fieldname_oftype`.
+"""
+function fieldidx_oftype(OBJ::Type, comparison::F) where F
+    Base.@assume_effects :foldable
+    idx = findfirst(comparison ∘ unwrap_optional, fieldtypes(OBJ))
+    return idx === nothing ? -1 : idx
+end
+# Version taking just the type
+function fieldidx_oftype(::Type{O}, ::Type{T}) where {O, T}
+    return fieldidx_oftype(O, Base.Fix2(<:, T))
+end
+
 # We define these explicitly to avoid relying on the internal `instance` field of the function type to get the instance 
 const FIELDNAME_NOT_FOUND_SYMBOL = :_field_of_type_not_found_
 
@@ -39,13 +65,17 @@ If the second argument is a type, this simply translates to the following compar
 ```julia
     comparison = T -> T <: supertype
 ```
+
+!!! note
+    Since v1.18.0, this function relies on `fieldidx_oftype` to find the field index.
 """
 function fieldname_oftype(OBJ::Type, comparison::F) where F
     Base.@assume_effects :foldable
-    idx = findfirst(comparison ∘ unwrap_optional, fieldtypes(OBJ))
-    idx === nothing && return FIELDNAME_NOT_FOUND_SYMBOL
+    idx = fieldidx_oftype(OBJ, comparison)
+    idx === -1 && return FIELDNAME_NOT_FOUND_SYMBOL
     return fieldname(OBJ, idx)
 end
+
 
 """
     field_oftype(obj, comparison)
@@ -66,10 +96,6 @@ function field_oftype(obj::Type, second::F) where {F}
     fname = fieldname_oftype(obj, second)::Symbol
     fname === FIELDNAME_NOT_FOUND_SYMBOL && return NotFound()
     return fieldtype(obj, fname)
-end
-
-function fieldname_oftype(::Type{O}, ::Type{T}) where {O, T}
-    return fieldname_oftype(O, Base.Fix2(<:, T))
 end
 
 """
