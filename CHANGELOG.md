@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [1.18.1] - 2025-10-06
+### Changed
+- Updated compat of `Meshes` to include 0.55.
+- Updated compat of `CoordRefSystems` to include 0.19.
+
 ## [1.18.0] - 2025-09-30
 ### Added
 - Added a new internal function `fieldidx_oftype` which returns the index of the first field of a type which satisfies a given comparison function.
