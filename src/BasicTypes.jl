@@ -7,35 +7,33 @@ using StaticArrays: StaticArrays, SVector
 using TerminalLoggers: TerminalLoggers, TerminalLogger
 using Unitful: Unitful, °, rad, Quantity, Length, NoDims, m, km, @u_str, 
     ustrip, uconvert, unit, Units
+import Dates
 
 # Exports from deps
 export °, km, @u_str, ustrip
 
 include("types.jl")
-export ExtraOutput, NotSimulated, NotProvided, SkipChecks
+export ExtraOutput, SkipChecks
 
 include("type_aliases.jl")
-export UnitfulAngleQuantity, ValidAngle, ValidDistance, PS, Point, Point2D, 
-    Point3D, Deg, Rad, Met, Len, Optional, NotSet
+public PS, Point, Point2D, Point3D
 
-include("scopedrefvalue.jl")
-export ScopedRefValue
-public with
+include("optionals.jl")
+export NotProvided, NotSimulated, NotSet, Optional, isnotset, isprovided, issimulated, fallback, @fallback, unwrap_optional
+public bypass_bottom
 
-include("unitful_helpers.jl")
-export enforce_unit, enforce_unitless
+include("units.jl")
+export Angle, Distance, Mass, Time, Temperature, Frequency, Power
+export base_unit, enforce_unit, enforce_unitless, raw_angle, raw_distance, raw_mass, raw_time
 
 include("constants.jl")
 export CONSTANTS
 
 include("functions.jl")
-export to_length, to_meters, to_radians, to_degrees, terminal_logger, 
-    progress_logger, basetype, asdeg, stripdeg, isnotset, fallback, sa_type,
-    isprovided, issimulated
-public bypass_bottom
+export terminal_logger, progress_logger, basetype, sa_type
 
 include("macros.jl")
-export @define_kwargs_defaults, @add_kwargs_defaults, @fallback
+export @define_kwargs_defaults, @add_kwargs_defaults
 
 include("valuetype.jl")
 export valuetype, change_valuetype, common_valuetype, promote_valuetype

@@ -1,5 +1,3 @@
-
-
 """
     valuetype(x)
 
@@ -16,7 +14,6 @@ valuetype(::Type{T}) where T <: Real = T
 valuetype(::T) where T = valuetype(T)
 valuetype(T::DataType) = Union{}
 valuetype(::Type{<:AbstractArray{T}}) where T = T
-valuetype(::Type{ScopedRefValue{T}}) where T = T
 
 """
     change_valuetype(::Type{T}, x)

@@ -1,29 +1,3 @@
-"""
-    unwrap_optional(::Type)
-
-Function used to unwrap the type `T` from `Optional{T}`.
-If the provided type is not of the form `Optional{T}`, it simply returns it unchanged.
-
-!!! note
-    When calling this function with simply `Optional` as input, the function throws an error.
-
-```jldoctest
-julia> using BasicTypes: BasicTypes, unwrap_optional, Optional
-
-julia> unwrap_optional(Optional{Float32})
-Float32
-
-julia> unwrap_optional(Float64)
-Float64
-```
-"""
-unwrap_optional(T::Type) = return T
-function unwrap_optional(U::Union)
-    (; a, b) = U
-    b <: NotSet && return a
-    a <: NotSet && return unwrap_optional(b)
-    return U
-end
 
 
 """

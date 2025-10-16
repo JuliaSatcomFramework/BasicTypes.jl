@@ -4,6 +4,26 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.0.0] -- 2025-10-16
+
+This release provides an overhaul of the unit system, including several breaking changes.
+
+### Changed
+- ⚠️ BREAKING: A unitless value will now be interpreted as being in the respective SI base unit when calling `enforce_unit` 
+
+### Added
+- Dimension aliases for Area, Volume, Speed, Acceleration, Frequency, Force, Power
+- Quantity aliases for Distance, Mass, Time, Angle, Temperature, Frequency, Power
+- The `base_unit` function, returning the respective SI base unit for the provided quantity or unit
+- The functions `raw_angle`, `raw_mass`, `raw_time`, `raw_distance` to obtain a unitless value in the respective SI base unit.
+
+### Removed
+- Angle helpers: `asdeg`, `stripdeg`, `to_radians`, `to_degrees` -> Use `enforce_unit` and `ustrip` instead.
+- Length helpers: `to_length`, `to_meters` -> Use `enforce_unit` and `ustrip` instead.
+- Old aliases: `Len`, `Met`, `Deg`, `Rad`, `LengthUnit`
+- Old quantity unions: `ValidAngle`, `ValidDistance` -> Use `Angle` or `Distance` instead.
+- ScopedRefValue removed entirely. Check out [ScopedSettings.jl](https://github.com/oschulz/ScopedSettings.jl) as a possible alternative.
+
 ## [1.18.1] - 2025-10-06
 ### Changed
 - Updated compat of `Meshes` to include 0.55.
