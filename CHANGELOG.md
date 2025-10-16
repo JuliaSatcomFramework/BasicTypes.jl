@@ -9,12 +9,13 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 This release provides an overhaul of the unit system, including several breaking changes.
 
 ### Changed
-- ⚠️ BREAKING: A unitless value will now be interpreted as being in the respective SI base unit when calling `enforce_unit` 
+- ⚠️ BREAKING: A unitless value will now be interpreted as being in the respective SI base unit when calling `enforce_unit`. 
+- ⚠️ BREAKING: `Point`, `Point2D`, and `Point3D` are no longer exported. You can still access them fully qualified.
 
 ### Added
 - Dimension aliases for Area, Volume, Speed, Acceleration, Frequency, Force, Power
 - Quantity aliases for Distance, Mass, Time, Angle, Temperature, Frequency, Power
-- The `base_unit` function, returning the respective SI base unit for the provided quantity or unit
+- The `base_unit` function, returning the respective SI base unit for the provided quantity or unit.
 - The functions `raw_angle`, `raw_mass`, `raw_time`, `raw_distance` to obtain a unitless value in the respective SI base unit.
 
 ### Removed

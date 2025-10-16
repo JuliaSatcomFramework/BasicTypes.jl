@@ -96,10 +96,12 @@ See also: [`enforce_unitless`](@ref)
 """
 enforce_unit(reference::Unitful.Units, value::Unitful.Quantity) = uconvert(reference, value)
 enforce_unit(reference::Unitful.Units, value::Dates.FixedPeriod) = uconvert(reference, value)
+enforce_unit(reference::Type{<:Unitful.Quantity}, value::Unitful.Quantity) = convert(reference, value)
+enforce_unit(reference::Unitful.Quantity, value::Unitful.Quantity) = enforce_unit(typeof(reference), value)
 enforce_unit(reference, value) = enforce_unit(unit(reference), value)
 
 """
-    enforce_unit(reference, value::Number, [interpret_as::Unitful.Units])
+    enforce_unit(reference, value::Real, [interpret_as::Unitful.Units])
 
 Takes the provided unitless `value` and converts it to the unit specified by `reference`.
 The number is interpreted as the unit specified by `interpret_as` (if provided) or as the preferred base unit of `reference` otherwise.
@@ -107,11 +109,13 @@ The number is interpreted as the unit specified by `interpret_as` (if provided) 
 If `reference` is a Quantity, the same data type is used for the returned Quantity.
 
 ```jldoctest
+julia> using BasicTypes
+
 julia> enforce_unit(u"km", 3) # Lengths are interpreted as meters by default
 3//1000 km
 
 julia> enforce_unit(1.0u"mg", 2) # Weights use kg by default
-2.0e6mg
+2.0e6 mg
 
 julia> enforce_unit(u"°", 1*pi) # Angles are interpreted as radians
 180.0°
@@ -119,8 +123,8 @@ julia> enforce_unit(u"°", 1*pi) # Angles are interpreted as radians
 
 See also: [`enforce_unit(reference, value::Unitful.Quantity)`](@ref)
 """
-enforce_unit(reference, value::Number, interpret_as::Unitful.Units) = enforce_unit(reference, value * interpret_as)
-enforce_unit(reference, value::Number) = enforce_unit(reference, value, base_unit(reference))
+enforce_unit(reference, value::Real, interpret_as::Unitful.Units) = enforce_unit(reference, value * interpret_as)
+enforce_unit(reference, value::Real) = enforce_unit(reference, value, base_unit(reference))
 
 # Function creating a function to enforce a specific unit
 enforce_unit(reference) = Base.Fix1(enforce_unit, reference)
