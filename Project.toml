@@ -23,7 +23,7 @@ StructArraysExt = "StructArrays"
 
 [compat]
 CoordRefSystems = "0.16 - 0.19"
-Dates = "1.11.0"
+Dates = "1"
 Logging = "1"
 LoggingExtras = "1.1.0"
 Meshes = "0.51 - 0.55"
