@@ -1,37 +1,3 @@
-"""
-    NotSet = Union{NotProvided, NotSimulated}
-"""
-const NotSet = Union{NotProvided, NotSimulated}
-
-"""
-    Optional{T} = Union{T, NotProvided, NotSimulated}
-
-This type alias is used to represent an optional value, mostly for use as type of struct fields for which a default value (either `NotProvided` or `NotSimulated`) is expected and used as default in the type's constructor.
-"""
-const Optional{T} = Union{T, NotSet}
-
-# helper type alias, taken from CoordRefSystems.jl
-const Len{T} = Quantity{T,u"𝐋"}
-const Met{T} = Quantity{T,u"𝐋",typeof(m)}
-const Deg{T} = Quantity{T,NoDims,typeof(°)}
-const Rad{T} = Quantity{T,NoDims,typeof(rad)}
-
-## Angle Types
-const LengthUnit = Unitful.Units{<:Any, u"𝐋", nothing}
-const UnitfulAngleQuantity = Union{Deg, Rad}
-"""
-    const ValidAngle = Union{UnitfulAngleQuantity, Real}
-
-Union type representing a scalar value that can be interpreted as an angle, which can be either a unitless real number, or a Unitful.Quantity with `u"rad"` or `u"°"` as unit.
-"""
-const ValidAngle = Union{UnitfulAngleQuantity, Real}
-"""
-    const ValidDistance = Union{Len, Real}
-
-Union type representing a scalar value that can be interpreted as a distance, which can be either a unitless real number, or a Unitful.Quantity with a valid Length unit.
-"""
-const ValidDistance = Union{Len, Real}
-
 # Type alias for valid point subtypes
 const PS = Union{Real, Quantity{<:Real}}
 

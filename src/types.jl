@@ -16,25 +16,6 @@ Base.eltype(::EmptyIterator) = Union{}
 Base.keys(::EmptyIterator) = Base.OneTo(0) # Required for `eachindex`
 
 """
-    NotProvided <: EmptyIterator
-
-Type used to specify that a field is not provided. This is useful when a field
-is optional and the user wants to specify that it is not provided, instead of
-using `nothing` which could be a valid value for the field.
-"""
-struct NotProvided <: EmptyIterator end
-
-"""
-    NotSimulated <: EmptyIterator
-
-Custom type to indicate that a certain operation or function is not
-simulated. Used mostly for dispatch and for explicitly indicating that something
-should be skipped during the simulation (without relying on `nothing` or
-`missing`).
-"""
-struct NotSimulated <: EmptyIterator end
-
-"""
     NotFound
 
 Singletone type used as return type of some functions in this package to clearly identified that the desired output could not be found

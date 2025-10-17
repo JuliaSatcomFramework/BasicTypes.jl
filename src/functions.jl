@@ -78,38 +78,6 @@ basetype(T::Type) = return Base.typename(T).wrapper
 basetype(::Union) = return Union
 basetype(::T) where T = return basetype(T)
 
-
-
-"""
-    isnotset(x)
-
-Return `true` if `x` is not set to a value. 
-(That is, `x` is either `NotProvided` or `NotSimulated`)
-"""
-isnotset(x) = x isa NotSet
-
-"""
-    fallback(x...)
-
-Return the first value in the arguments which is set, i.e. is not equal to `NotProvided` or `NotSimulated`.
-If no value is found, an `ArgumentError` is thrown.
-
-# Examples
-```
-julia> x = NotProvided()
-julia> y = NotSimulated()
-julia> z = 1.0
-julia> fallback(x, y, z)
-1.0
-```
-"""
-function fallback end
-
-fallback() = throw(ArgumentError("No value arguments present"))
-fallback(x::NotSet, y...) = fallback(y...)
-fallback(x::Any, y...) = x
-
-
 """
     sa_type(DT::DataType, N::Union{Int, TypeVar}; unwrap = T -> false)
 
@@ -162,28 +130,3 @@ saf = SAField(StructArray([CompositeStruct() for i in 1:3, j in 1:2]; unwrap = T
 where the `SAField` type has a fully concrete type for it's field `sa` which would be quite complex to specify manually
 """
 sa_type(U::UnionAll, args...; kwargs...) = throw(ArgumentError("The provided eltype `$U` is not fully parametrized and would result in an abstract `StructArray` type"))
-
-"""
-    isprovided(x) -> Bool
-
-Check if the value `x` is not of type `NotProvided`.
-Returns `true` if `x` is provided, otherwise `false`.
-"""
-isprovided(x) = typeof(x) != NotProvided
-
-"""
-    issimulated(x) -> Bool
-
-Check if `x` is simulated by verifying its type is not `NotSimulated`.
-Returns `true` if `x` is simulated, `false` otherwise.
-"""
-issimulated(x) = typeof(x) != NotSimulated
-
-"""
-    bypass_bottom(candidate::Type, fallback::Type)
-
-This function takes as input two types, a `candidate` and a `fallback`, and returns `candidate` unless `candidate === Union{}` in which case it returns `fallback`.
-"""
-bypass_bottom(candidate::Type, fallback::Type) = return candidate
-bypass_bottom(::typeof(Union{}), fallback::Type) = return fallback
-bypass_bottom(::typeof(Union{}), ::typeof(Union{})) = throw(ArgumentError("Cannot call the `bypass_bottom` function with `Union{}` as both first and second argument."))
