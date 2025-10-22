@@ -43,9 +43,8 @@ makedocs(
 )
 
 if should_deploy
-    repo_url = "https://github.com/" * repo
     DocumenterVitepress.deploydocs(;
-        repo = repo_url,
+        repo = replace(Documenter.Remotes.repourl(remote), r"^https?://" => ""),
         target = joinpath(@__DIR__, "build"),
         branch = "gh-pages",
         devbranch,
