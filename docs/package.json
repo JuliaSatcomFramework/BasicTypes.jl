@@ -7,9 +7,9 @@
     "@types/plotly.js-dist-min": "^2.3.4"
   },
   "scripts": {
-    "docs:dev": "npx vitepress dev build",
+    "docs:dev": "npx vitepress dev build/.documenter",
     "docs:build": "npx vitepress build build",
-    "docs:preview": "npx vitepress preview build"
+    "docs:preview": "npx vitepress preview build/.final_site"
   },
   "dependencies": {
     "markdown-it-footnote": "^4.0.0",
