@@ -132,6 +132,7 @@ enforce_unit(reference) = Base.Fix1(enforce_unit, reference)
 
 """
     enforce_unitless(reference, value)
+    enforce_unitless(reference, value::Real, interpret_as::Unitful.Units)
     enforce_unitless(reference)
 
 Takes the provided `value` (supposed to represent a quantity tied to a specific unit), converts it to the unit represented by `reference` and then strips the units.
@@ -156,6 +157,7 @@ julia> 1km |> enforce_unitless(u"m") ∘ float # Test the method returning a fun
 1000.0
 ```
 """
+enforce_unitless(reference, value::Real, interpret_as::Unitful.Units) = ustrip(enforce_unit(reference, value, interpret_as))
 enforce_unitless(reference, value) = ustrip(enforce_unit(reference, value))
 enforce_unitless(reference) = Base.Fix1(enforce_unitless, reference)
 

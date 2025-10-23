@@ -2,6 +2,7 @@
     using BasicTypes
     @test enforce_unit(1u"m", 10km) ≈ 10000u"m"
     @test enforce_unit(1u"m", 10) ≈ 10u"m"
+    @test enforce_unitless(u"km", 100, u"cm") ≈ 0.001
 end
 
 @testitem "raw values" begin
