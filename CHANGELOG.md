@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.0.1] -- 2025-10-23
+
+### Added
+- `enforce_unitless` now supports providing an interpret-as unit for raw values.
+
 ## [2.0.0] -- 2025-10-16
 
 This release provides an overhaul of the unit system, including several breaking changes.
