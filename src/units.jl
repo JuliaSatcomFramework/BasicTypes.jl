@@ -199,5 +199,13 @@ raw_time(x::Time) = ustrip(enforce_unit(base_unit(u"s"), x))
 
 #endregion
 
+"""
+    assert_angle_limit(x::Angle; name::String = "Angle", limit = π, limit_min = -limit, limit_max = limit, msg::String = "<name> must satisfy <limit_min> ≤ x ≤ <limit_max>")
 
-
+Asserts that the provided angle `x` is within the specified limits.
+By default, the limits are set to `-π` and `π`.
+"""
+function assert_angle_limit(x::Angle; name::String = "Angle", limit = π, limit_min = -limit, limit_max = limit, msg::String = "$name must satisfy $limit_min ≤ x ≤ $limit_max
+Consider using `°` from Unitful (also re-exported by BasicTypes) if you want to pass numbers in degrees, by doing `x * °`." )  
+	@assert (limit_min <= x <= limit_max) msg
+end
