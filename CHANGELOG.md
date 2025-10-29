@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.0.2] -- 2025-10-25
+
+### Added
+- `assert_angle_limit` to assert angles are within specified bounds 
+
 ## [2.0.1] -- 2025-10-23
 
 ### Added

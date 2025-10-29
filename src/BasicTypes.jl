@@ -24,7 +24,7 @@ public bypass_bottom
 
 include("units.jl")
 export Angle, Distance, Mass, Time, Temperature, Frequency, Power
-export base_unit, enforce_unit, enforce_unitless, raw_angle, raw_distance, raw_mass, raw_time
+export base_unit, enforce_unit, enforce_unitless, raw_angle, raw_distance, raw_mass, raw_time, assert_angle_limit
 
 include("constants.jl")
 export CONSTANTS
