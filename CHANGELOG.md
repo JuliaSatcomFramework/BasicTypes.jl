@@ -10,7 +10,7 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 ## [1.19.0] - 2025-11-03
 ### Changed
 - The `tee_logger` and `progress_logger` functions now accept a `Logger` as optional argument (default to `current_logger()`) to eventually add the `TerminalLogger` to.
-- The `tee_logger` function now simply returns the provided logger if it `Logging.NullLogger()`
+- The `tee_logger` function now simply returns the provided logger if it is `Logging.NullLogger()`
 
 ## [2.0.2] -- 2025-10-25
 
