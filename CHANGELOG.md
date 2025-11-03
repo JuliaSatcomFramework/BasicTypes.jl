@@ -4,10 +4,19 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [1.19.1] - 2025-11-03
+### Changed
+- Ported back the compat changes from 1.18.1 (1.19 was wrongly branched from 1.18)
+
 ## [1.19.0] - 2025-11-03
 ### Changed
 - The `tee_logger` and `progress_logger` functions now accept a `Logger` as optional argument (default to `current_logger()`) to eventually add the `TerminalLogger` to.
 - The `tee_logger` function now simply returns the provided logger if it `Logging.NullLogger()`
+
+## [1.18.1] - 2025-10-06
+### Changed
+- Updated compat of `Meshes` to include 0.55.
+- Updated compat of `CoordRefSystems` to include 0.19.
 
 ## [1.18.0] - 2025-09-30
 ### Added
