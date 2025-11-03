@@ -25,10 +25,12 @@ end
     using BasicTypes.TerminalLoggers: TerminalLogger
     using BasicTypes.LoggingExtras: TeeLogger
     using BasicTypes: tee_logger
+    using BasicTypes.Logging: NullLogger
     term_logger = terminal_logger()
     @test term_logger isa TerminalLogger
     @test progress_logger() === Base.current_logger() # We are in non-interactive mode in tests
     @test tee_logger() isa TeeLogger
+    @test tee_logger(NullLogger()) === NullLogger()
 end
 
 @testitem "Basetype" begin

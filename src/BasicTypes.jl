@@ -1,6 +1,6 @@
 module BasicTypes
 
-using Logging: Logging, current_logger
+using Logging: Logging, current_logger, NullLogger
 using LoggingExtras: LoggingExtras, TeeLogger
 using Base.ScopedValues: ScopedValues, ScopedValue
 using StaticArrays: StaticArrays, SVector
