@@ -7,6 +7,10 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 - Ported the changes of 1.19 into v2 series.
 
 
+## [1.19.1] - 2025-11-03
+### Changed
+- Ported back the compat changes from 1.18.1 (1.19 was wrongly branched from 1.18)
+
 ## [1.19.0] - 2025-11-03
 ### Changed
 - The `tee_logger` and `progress_logger` functions now accept a `Logger` as optional argument (default to `current_logger()`) to eventually add the `TerminalLogger` to.
