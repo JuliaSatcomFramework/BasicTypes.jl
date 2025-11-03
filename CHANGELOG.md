@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [1.19.0] - 2025-11-03
+### Changed
+- The `tee_logger` and `progress_logger` functions now accept a `Logger` as optional argument (default to `current_logger()`) to eventually add the `TerminalLogger` to.
+- The `tee_logger` function now simply returns the provided logger if it `Logging.NullLogger()`
+
 ## [1.18.0] - 2025-09-30
 ### Added
 - Added a new internal function `fieldidx_oftype` which returns the index of the first field of a type which satisfies a given comparison function.
