@@ -48,20 +48,20 @@ function terminal_logger()
     return TERMINAL_LOGGER[]
 end
 
-tee_logger() = TeeLogger(terminal_logger(), current_logger())
+tee_logger(base_logger = current_logger()) = base_logger isa NullLogger ? base_logger : TeeLogger(terminal_logger(), base_logger)
 
 """
-    progress_logger()
+    progress_logger(base_logger = current_logger())
 
 Returns the logger to use for progress monitoring via ProgressLogging.jl. 
 
-When called from the REPL (checking the `isinteractive` function), it will return a TeeLogger (from LoggingExtras.jl) containing the current logger and a `TerminalLogger` (from TerminalLoggers.jl). 
+When called from the REPL (checked via the `isinteractive` function) **and** with a `base_logger` which **is not** a `NullLogger` , it will return a TeeLogger (from LoggingExtras.jl) containing the `base_logger` and a `TerminalLogger` (from TerminalLoggers.jl). 
 This is because the `@progress` macro from ProgressLogging.jl does not print the
 progress bar in the REPL without `TerminalLogger`.
 
-Outside of interactive sessions, it will simply return the current logger.
+Outside of interactive sessions, it will simply return the provided `base_logger`.
 """
-progress_logger() = isinteractive() ? tee_logger() : current_logger()
+progress_logger(base_logger = current_logger()) = isinteractive() ? tee_logger(base_logger) : base_logger
 
 # This function shall create the non-parametrzed subtype, used for simplifying adding methods to `StructArrays.similar_type`. The solution is taken from https://discourse.julialang.org/t/deparametrising-types/41939/4
 """
