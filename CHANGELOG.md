@@ -3,9 +3,17 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
-### Changed
-- Ported the changes of 1.19 into v2 series.
 
+## [2.1.0] -- 2025-11-04
+
+### Added
+- Quantities for `Speed` and `AngularRate`
+
+### Changed
+- ⚠️ `Time` has been renamed to `Duration`, and `raw_time` is now called `raw_duration`. The original names have been deprecated and will be removed in a future version.
+- `enforce_unit`, `enforce_unitless`, `raw_<x>` now handle `NotSet` values by returning the passed value.
+- The `tee_logger` and `progress_logger` functions now accept a `Logger` as optional argument (default to `current_logger()`) to eventually add the `TerminalLogger` to.
+- The `tee_logger` function now simply returns the provided logger if it is `Logging.NullLogger()`
 
 ## [1.19.1] - 2025-11-03
 ### Changed

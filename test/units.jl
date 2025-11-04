@@ -14,6 +14,19 @@ end
     @test raw_time(1u"d") ≈ 24 * 3600.0
 end
 
+@testitem "not set values" begin
+    using BasicTypes
+
+    @test raw_angle(NotProvided()) == NotProvided()
+    @test raw_distance(NotSimulated()) == NotSimulated()
+    @test raw_duration(NotProvided()) == NotProvided()
+    @test raw_mass(NotProvided()) == NotProvided()
+
+    @test enforce_unit(1u"m", NotProvided()) == NotProvided()
+    @test enforce_unit(1u"m", NotProvided(), u"m") == NotProvided()
+    @test enforce_unitless(u"m", NotSimulated()) == NotSimulated()
+end
+
 @testitem "angle_limit" begin
     using BasicTypes
 
