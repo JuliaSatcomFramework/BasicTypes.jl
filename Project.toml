@@ -1,6 +1,6 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
-version = "2.0.2"
+version = "2.1.0"
 authors = ["Alberto Mengali <disberd@gmail.com>"]
 
 [deps]

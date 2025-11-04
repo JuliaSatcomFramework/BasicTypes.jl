@@ -23,8 +23,8 @@ export NotProvided, NotSimulated, NotSet, Optional, isnotset, isprovided, issimu
 public bypass_bottom
 
 include("units.jl")
-export Angle, Distance, Mass, Time, Temperature, Frequency, Power
-export base_unit, enforce_unit, enforce_unitless, raw_angle, raw_distance, raw_mass, raw_time, assert_angle_limit
+export Angle, Distance, Speed, Mass, Duration, Temperature, Frequency, Power, AngularRate
+export base_unit, enforce_unit, enforce_unitless, raw_angle, raw_distance, raw_mass, raw_duration, assert_angle_limit
 
 include("constants.jl")
 export CONSTANTS
@@ -40,5 +40,8 @@ export valuetype, change_valuetype, common_valuetype, promote_valuetype
 
 include("getproperty_oftype.jl")
 export PropertyOrNothing, getproperty_oftype
+
+include("deprecated.jl")
+export Time, raw_time
 
 end

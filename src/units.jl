@@ -11,9 +11,11 @@ const EnergyDimension = Unitful.𝐌 * Unitful.𝐋^2 * Unitful.𝐓^-2
 # Quantities
 const DimensionQuantity{D, T} = Union{Quantity{T, D}, Real}
 const Distance{T} = DimensionQuantity{Unitful.𝐋, T}
+const Speed{T} = DimensionQuantity{SpeedDimension, T}
 const Mass{T} = DimensionQuantity{Unitful.𝐌, T}
-const Time{T} = Union{DimensionQuantity{Unitful.𝐓, T}, Dates.FixedPeriod}
+const Duration{T} = Union{DimensionQuantity{Unitful.𝐓, T}, Dates.FixedPeriod}
 const Angle{T} = Union{Quantity{T,NoDims,typeof(Unitful.°)}, Quantity{T,NoDims,typeof(Unitful.rad)}, Real}
+const AngularRate{T} = DimensionQuantity{Unitful.𝐓^-1, T} # Since angles are no-dims, we can't restrict much better
 const Temperature{T} = DimensionQuantity{Unitful.𝚯, T}
 const Frequency{T} = DimensionQuantity{FrequencyDimension, T}
 const Power{T} = DimensionQuantity{PowerDimension, T}
@@ -129,7 +131,6 @@ enforce_unit(reference, value::Real) = enforce_unit(reference, value, base_unit(
 # Function creating a function to enforce a specific unit
 enforce_unit(reference) = Base.Fix1(enforce_unit, reference)
 
-
 """
     enforce_unitless(reference, value)
     enforce_unitless(reference, value::Real, interpret_as::Unitful.Units)
@@ -175,6 +176,7 @@ The optional `rounding` argument can be used to wrap the returned value within `
 """
 raw_angle(x::Angle) = ustrip(enforce_unit(base_unit(u"rad"), x))
 raw_angle(x::Angle, rounding::RoundingMode) = rem(raw_angle(x), raw_angle(360°), rounding)
+raw_angle(x::NotSet) = x
 
 """
     raw_distance(x::Distance)
@@ -182,6 +184,7 @@ raw_angle(x::Angle, rounding::RoundingMode) = rem(raw_angle(x), raw_angle(360°)
 Returns the distance in meters as a unitless number.
 """
 raw_distance(x::Distance) = ustrip(enforce_unit(base_unit(u"m"), x))
+raw_distance(x::NotSet) = x
 
 """
     raw_mass(x::Mass)
@@ -189,13 +192,15 @@ raw_distance(x::Distance) = ustrip(enforce_unit(base_unit(u"m"), x))
 Returns the mass in kilograms as a unitless number.
 """
 raw_mass(x::Mass) = ustrip(enforce_unit(base_unit(u"kg"), x))
+raw_mass(x::NotSet) = x
 
 """
-    raw_time(x::Time)
+    raw_duration(x::Duration)
 
-Returns the time in seconds as a unitless number.
+Returns the duration in seconds as a unitless number.
 """
-raw_time(x::Time) = ustrip(enforce_unit(base_unit(u"s"), x))
+raw_duration(x::Duration) = ustrip(enforce_unit(base_unit(u"s"), x))
+raw_duration(x::NotSet) = x
 
 #endregion
 
@@ -209,3 +214,8 @@ function assert_angle_limit(x::Angle; name::String = "Angle", limit = π, limit_
 Consider using `°` from Unitful (also re-exported by BasicTypes) if you want to pass numbers in degrees, by doing `x * °`." )  
 	@assert (limit_min <= x <= limit_max) msg
 end
+
+# Compatibility with NotSet type
+enforce_unit(reference, value::NotSet, interpret_as::Unitful.Units) = value
+enforce_unit(reference, value::NotSet) = value
+enforce_unitless(reference, value::NotSet) = value
