@@ -4,6 +4,13 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.1.1] -- 2025-11-05
+
+### Changed
+- `enforce_unit`, `enforce_unitless`, `raw_<x>` now return `nothing` when the input is `Nothing`.
+- `Unitful.ustrip` and `Unitful.uconvert` now pass `NotSet` inputs through.
+- `Unitful.dimension` and `Unitful.unit` now return `NoDims` and `NoUnits` for `NotSet` inputs, respectively.
+
 ## [2.1.0] -- 2025-11-04
 
 ### Added
