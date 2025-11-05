@@ -228,6 +228,7 @@ enforce_unitless(reference, value::NotSet) = value
 enforce_unitless(reference, value::Nothing) = value
 
 # External compat with NotSet type
+Unitful.ustrip(quantity::NotSet) = quantity
 Unitful.ustrip(u::Unitful.Units, quantity::NotSet) = quantity
 Unitful.uconvert(u::Unitful.Units, quantity::NotSet) = quantity
 Unitful.unit(quantity::NotSet) = Unitful.NoUnits
