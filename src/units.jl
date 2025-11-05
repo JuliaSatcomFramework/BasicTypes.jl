@@ -177,6 +177,7 @@ The optional `rounding` argument can be used to wrap the returned value within `
 raw_angle(x::Angle) = ustrip(enforce_unit(base_unit(u"rad"), x))
 raw_angle(x::Angle, rounding::RoundingMode) = rem(raw_angle(x), raw_angle(360°), rounding)
 raw_angle(x::NotSet) = x
+raw_angle(x::Nothing) = x
 
 """
     raw_distance(x::Distance)
@@ -185,6 +186,7 @@ Returns the distance in meters as a unitless number.
 """
 raw_distance(x::Distance) = ustrip(enforce_unit(base_unit(u"m"), x))
 raw_distance(x::NotSet) = x
+raw_distance(x::Nothing) = x
 
 """
     raw_mass(x::Mass)
@@ -193,6 +195,7 @@ Returns the mass in kilograms as a unitless number.
 """
 raw_mass(x::Mass) = ustrip(enforce_unit(base_unit(u"kg"), x))
 raw_mass(x::NotSet) = x
+raw_mass(x::Nothing) = x
 
 """
     raw_duration(x::Duration)
@@ -201,6 +204,7 @@ Returns the duration in seconds as a unitless number.
 """
 raw_duration(x::Duration) = ustrip(enforce_unit(base_unit(u"s"), x))
 raw_duration(x::NotSet) = x
+raw_duration(x::Nothing) = x
 
 #endregion
 
@@ -215,7 +219,16 @@ Consider using `°` from Unitful (also re-exported by BasicTypes) if you want to
 	@assert (limit_min <= x <= limit_max) msg
 end
 
-# Compatibility with NotSet type
+# Compatibility with NotSet type and Nothing
 enforce_unit(reference, value::NotSet, interpret_as::Unitful.Units) = value
 enforce_unit(reference, value::NotSet) = value
+enforce_unit(reference, value::Nothing, interpret_as::Unitful.Units) = value
+enforce_unit(reference, value::Nothing) = value
 enforce_unitless(reference, value::NotSet) = value
+enforce_unitless(reference, value::Nothing) = value
+
+# External compat with NotSet type
+Unitful.ustrip(u::Unitful.Units, quantity::NotSet) = quantity
+Unitful.uconvert(u::Unitful.Units, quantity::NotSet) = quantity
+Unitful.unit(quantity::NotSet) = Unitful.NoUnits
+Unitful.dimension(quantity::NotSet) = Unitful.NoDims

@@ -25,6 +25,19 @@ end
     @test enforce_unit(1u"m", NotProvided()) == NotProvided()
     @test enforce_unit(1u"m", NotProvided(), u"m") == NotProvided()
     @test enforce_unitless(u"m", NotSimulated()) == NotSimulated()
+
+    @test enforce_unit(u"m", nothing) === nothing
+    @test enforce_unitless(u"m", nothing) === nothing
+end
+
+@testitem "Unitful compat" begin
+    using BasicTypes
+    using Unitful
+
+    @test Unitful.unit(NotProvided()) == Unitful.NoUnits
+    @test Unitful.dimension(NotProvided()) == Unitful.NoDims
+    @test Unitful.ustrip(u"m", NotProvided()) == NotProvided()
+    @test Unitful.uconvert(u"m", NotProvided()) == NotProvided()
 end
 
 @testitem "angle_limit" begin
