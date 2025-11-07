@@ -3,6 +3,13 @@
 This file contains the changelog for the BasicTypes.jl package. It follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## Unreleased
+### Fixed
+- Fixed a bug in `sa_type` which was not properly forwarding the `unwrap` function on nested StructArray unwrapping. (Ported from 1.19.2)
+
+## [1.19.2] - 2025-11-07
+
+### Fixed
+- Fixed a bug in `sa_type` which was not properly forwarding the `unwrap` function on nested StructArray unwrapping.
 
 ## [2.1.1] -- 2025-11-05
 
