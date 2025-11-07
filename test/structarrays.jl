@@ -39,4 +39,24 @@
         @test SAFieldUW(sa_unwrapped) isa SAFieldUW{2}
         @test SAField(sa_wrapped) isa SAField{2}
     end
+
+    @kwdef struct InnerInner
+        a::Float64 = 0
+    end
+    @kwdef struct Inner
+        inner::InnerInner = InnerInner()
+    end
+
+    @kwdef struct Outer
+        inner::Inner = Inner()
+    end
+
+    @kwdef struct OuterUW
+        el::Outer = Outer()
+    end
+
+    outv = [OuterUW() for _ in 1:10]
+    unwrap = T -> !(T <: Union{Real, Inner})
+    sa = StructArray(outv; unwrap)
+    @test typeof(sa) == sa_type(OuterUW, 1; unwrap)
 end
