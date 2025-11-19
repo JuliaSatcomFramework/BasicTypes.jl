@@ -20,6 +20,11 @@ const Temperature{T} = DimensionQuantity{Unitful.𝚯, T}
 const Frequency{T} = DimensionQuantity{FrequencyDimension, T}
 const Power{T} = DimensionQuantity{PowerDimension, T}
 
+# Quantity Aliases
+const Meter{T} = Quantity{T,u"𝐋",typeof(Unitful.m)}
+const Degree{T} = Quantity{T,NoDims,typeof(Unitful.°)}
+const Radian{T} = Quantity{T,NoDims,typeof(Unitful.rad)}
+
 """
     base_unit(unit::Unitful.Units)
     base_unit(quantity::Unitful.Quantity)
