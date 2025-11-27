@@ -4,6 +4,11 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.2.0] -- 2025-11-27
+
+### Added
+- Added the `db2lin`, `lin2db`, `λ2f` and `f2λ` functions we used to have scattered in different packages.
+
 ## [2.1.3] -- 2025-11-19
 
 ### Added
