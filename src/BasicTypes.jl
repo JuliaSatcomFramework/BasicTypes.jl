@@ -31,7 +31,10 @@ include("constants.jl")
 export CONSTANTS
 
 include("functions.jl")
-export terminal_logger, progress_logger, basetype, sa_type, db2lin, lin2db, f2λ, λ2f
+export terminal_logger, progress_logger, basetype, sa_type
+
+include("telecom_utils.jl")
+export db2lin, lin2db, f2λ, λ2f
 
 include("macros.jl")
 export @define_kwargs_defaults, @add_kwargs_defaults
