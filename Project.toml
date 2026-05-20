@@ -1,6 +1,6 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
-version = "2.2.0"
+version = "2.2.1"
 authors = ["Alberto Mengali <disberd@gmail.com>", "Fabian Nawratil <git@nawratil.me>"]
 
 [deps]
@@ -26,9 +26,12 @@ CoordRefSystems = "0.16 - 0.19"
 Dates = "1"
 Logging = "1"
 LoggingExtras = "1.1.0"
-Meshes = "0.51 - 0.55"
+Meshes = "0.51 - 0.57"
 StaticArrays = "1.9.10"
 StructArrays = "0.7.1"
 TerminalLoggers = "0.1.7"
 Unitful = "1.22.0"
 julia = "1.11"
+
+[workspace]
+projects = ["test"]

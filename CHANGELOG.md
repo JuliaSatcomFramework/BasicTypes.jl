@@ -4,6 +4,10 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.2.1] -- 2026-05-20
+### Fixed
+- The `sa_type` function was not returning the correct type when dealing with types that define a custom StructArray layout. This is now fixed.
+
 ## [2.2.0] -- 2025-11-27
 
 ### Added
