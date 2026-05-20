@@ -59,4 +59,33 @@
     unwrap = T -> !(T <: Union{Real, Inner})
     sa = StructArray(outv; unwrap)
     @test typeof(sa) == sa_type(OuterUW, 1; unwrap)
+
+    # We test that this also gives the correct type when having a cu
+
+    @testset "Nested struct with Union field" begin
+        @kwdef struct LeafA
+            x::Float64 = rand()
+        end
+        @kwdef struct LeafB
+            y::Int = rand(1:10)
+        end
+        @kwdef struct NestedUnionField
+            val::Union{LeafA,LeafB} = rand() > 0.5 ? LeafA() : LeafB()
+            count::Int = 0
+        end
+        @kwdef struct OuterNestedUnion
+            inner::NestedUnionField = NestedUnionField()
+            flag::Bool = false
+        end
+
+        # Unwrap both outer types, but leave Union{LeafA,LeafB} as a plain Array
+        unwrap = T -> T <: Union{OuterNestedUnion,NestedUnionField}
+        data = [OuterNestedUnion() for _ in 1:15]
+        sa = StructArray(data; unwrap)
+
+        # The Union field must be stored as a plain vector with Union eltype
+        @test eltype(sa.inner.val) == Union{LeafA,LeafB}
+        # sa_type must predict exactly the same type as what the constructor produced
+        @test typeof(sa) == sa_type(OuterNestedUnion, 1; unwrap)
+    end
 end
