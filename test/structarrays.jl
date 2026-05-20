@@ -60,8 +60,8 @@
     sa = StructArray(outv; unwrap)
     @test typeof(sa) == sa_type(OuterUW, 1; unwrap)
 
-    # We test that this also gives the correct type when having a cu
-
+    # Verify that sa_type still predicts the correct StructArray type
+    # when a nested field contains a Union-typed value.
     @testset "Nested struct with Union field" begin
         @kwdef struct LeafA
             x::Float64 = rand()
