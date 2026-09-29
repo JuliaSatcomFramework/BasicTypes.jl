@@ -4,6 +4,10 @@ This file contains the changelog for the BasicTypes.jl package. It follows the [
 
 ## Unreleased
 
+## [2.2.2] -- 2026-09-29
+### Changed
+- Widened the compat of CoordRefSystems.jl to `0.16 - 0.21` and of Meshes.jl to `0.51 - 0.59`.
+
 ## [2.2.1] -- 2026-05-20
 ### Fixed
 - The `sa_type` function was not returning the correct type when dealing with types that define a custom StructArray layout. This is now fixed.
