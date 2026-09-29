@@ -1,6 +1,6 @@
 name = "BasicTypes"
 uuid = "13e19751-ccd1-416d-be0c-a6724a8caa31"
-version = "2.2.1"
+version = "2.2.2"
 authors = ["Alberto Mengali <disberd@gmail.com>", "Fabian Nawratil <git@nawratil.me>"]
 
 [deps]
@@ -22,11 +22,11 @@ MeshesExt = "Meshes"
 StructArraysExt = "StructArrays"
 
 [compat]
-CoordRefSystems = "0.16 - 0.19"
+CoordRefSystems = "0.16 - 0.21"
 Dates = "1"
 Logging = "1"
 LoggingExtras = "1.1.0"
-Meshes = "0.51 - 0.57"
+Meshes = "0.51 - 0.59"
 StaticArrays = "1.9.10"
 StructArrays = "0.7.1"
 TerminalLoggers = "0.1.7"
